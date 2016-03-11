@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Chris on 05/01/2016.
@@ -53,6 +54,12 @@ public class Event {
         delete.setText("delete");
         finished = new Button(ac);
         finished.setText("finished");
+        finished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishEvent(ma);
+            }
+        });
 
         buttonsLayout = new LinearLayout(ma);
         buttonsLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -70,21 +77,25 @@ public class Event {
                 }
             });
             buttonsLayout.addView(subtractTime);
+            this.duration = duration;
+            durationView = new TextView(ac);
+            durationView.setText(duration + " minutes remaining");
+            durationView.setTextColor(Color.BLACK);
         }
 
         linearLayout = new LinearLayout(ma);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.addView(titleView);
         linearLayout.addView(frequencyView);
+        if(durationView != null){
+            linearLayout.addView(durationView);
+        }
         linearLayout.addView(buttonsLayout);
-        ma.ll.addView(linearLayout,ma.llp);
+        ma.ll.addView(linearLayout, ma.llp);
 
-        this.duration = duration;
-        durationView = new TextView(ac);
-        durationView.setText(duration + " minutes");
-        durationView.setTextColor(Color.BLACK);
 
-        linearLayout.addView(durationView,3);
+
+
     }
 
     private void subtractTimeScreen(final MainActivity ma){
@@ -141,7 +152,19 @@ public class Event {
     }
 
     private void updateTime(MainActivity ma){
+        if(newDuration == 0){
+            finishEvent(ma);
+        }else{
+            DataBaseOperations dbo = new DataBaseOperations(ma);
+            dbo.updateTime(dbo, title, Integer.toString(newDuration));
+        }
+
+    }
+
+    private void finishEvent(MainActivity ma){
         DataBaseOperations dbo = new DataBaseOperations(ma);
-        dbo.updateTime(dbo, title, Integer.toString(newDuration));
+        dbo.updateEventFinished(dbo, title);
+        Toast.makeText(ma, "You have finished an event!", Toast.LENGTH_LONG).show();
+        ma.mainScreen();
     }
 }

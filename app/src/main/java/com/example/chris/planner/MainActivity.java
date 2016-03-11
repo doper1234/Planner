@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +21,8 @@ import java.util.Calendar;
 
 public class MainActivity extends Activity {
 
+        String dayOfTheWeek = "";
+        String dateOfTheMonth = "";
         Context ctx = this;
         SeekBar timeSeekBar;
         Button add, addToPlanner, cancel;
@@ -231,6 +234,7 @@ public class MainActivity extends Activity {
         }
 
         public void mainScreen(){
+                String getDateInfo[];
                 setContentView(R.layout.activity_main);
                 DateFormat df = new SimpleDateFormat("EEEE, LLLL d, yyyy");
                 Calendar calobj = Calendar.getInstance();
@@ -244,6 +248,14 @@ public class MainActivity extends Activity {
                         }
                 });
                 loadEvents();
+                getDateInfo = dateView.getText().toString().split(",");
+                dayOfTheWeek = getDateInfo[0];
+                String splitDate[] = getDateInfo[1].split(" ");
+                dateOfTheMonth = splitDate[2];
+
+                Log.d("Day of the week", dayOfTheWeek);
+                Log.d("Date of the month", dateOfTheMonth);
+
         }
 
         private void addNewItem(String frequency, int duration){
@@ -260,13 +272,17 @@ public class MainActivity extends Activity {
 
                 if(cr.moveToNext()){
                         do{
-                                String eventName, eventFrequency;
+                                String eventName, eventFrequency, eventFinished;
                                 int eventDuration;
 
-                                eventName = cr.getString(0);
-                                eventFrequency = cr.getString(1);
-                                eventDuration = Integer.parseInt(cr.getString(2));
-                                new Event(this, eventName, eventFrequency, eventDuration);
+                                eventFinished = cr.getString(3);
+                                if(eventFinished.equalsIgnoreCase("no")){
+                                        eventName = cr.getString(0);
+                                        eventFrequency = cr.getString(1);
+                                        eventDuration = Integer.parseInt(cr.getString(2));
+                                        new Event(this, eventName, eventFrequency, eventDuration);
+                                }
+
                         }while(cr.moveToNext());
                 }
 

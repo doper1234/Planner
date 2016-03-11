@@ -24,7 +24,8 @@ public class DataBaseOperations extends SQLiteOpenHelper {
                                 TableInfo.TABLE_NAME +" ( " +
                                 TableInfo.EVENT_NAME +" TEXT, " +
                                 TableInfo.EVENT_FREQUENCY + " TEXT, " +
-                                TableInfo.EVENT_DURATION + " INTEGER );" ;
+                                TableInfo.EVENT_DURATION + " INTEGER," +
+                                TableInfo.EVENT_FINISHED + " TEXT );" ;
 
     public DataBaseOperations(Context context) {
         super(context, TableInfo.DATABASE_NAME, null, database_version);
@@ -54,14 +55,24 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         cv.put(TableInfo.EVENT_NAME, eventName);
         cv.put(TableInfo.EVENT_FREQUENCY, eventFrequency);
         cv.put(TableInfo.EVENT_DURATION, eventDuration);
+        cv.put(TableInfo.EVENT_FINISHED, "no");
         long k = sqlDB.insert(TableInfo.TABLE_NAME, null, cv);
         Log.d("Database operations", "One raw inserted");
     }
 
     public Cursor getInformation(DataBaseOperations dbo){
         SQLiteDatabase sq = dbo.getWritableDatabase();
-        String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION};
-        Cursor CR = sq.query(TableInfo.TABLE_NAME, columns, null, null, null, null, null);
+        String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.EVENT_FINISHED};
+        //String args = "WHERE " + TableInfo.EVENT_FREQUENCY + " =? " + day + " OR " + TableInfo.EVENT_FREQUENCY + " =? " + date;
+        Cursor CR = sq.query(TableInfo.TABLE_NAME, columns, /*args*/null, null, null, null, null);
+        return CR;
+    }
+
+    public Cursor getInformation(DataBaseOperations dbo, String day, String date){
+        SQLiteDatabase sq = dbo.getWritableDatabase();
+        String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.EVENT_FINISHED};
+        //String args = "WHERE " + TableInfo.EVENT_FREQUENCY + " =? " + day + " OR " + TableInfo.EVENT_FREQUENCY + " =? " + date;
+        Cursor CR = sq.query(TableInfo.TABLE_NAME, columns, /*args*/null, null, null, null, null);
         return CR;
     }
 
@@ -76,6 +87,17 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         sq.update(TableInfo.TABLE_NAME, values, TableInfo.EVENT_NAME + " LIKE ?",
                 new String[] { String.valueOf(eventTitle) });
 
+    }
+
+    public void updateEventFinished(DataBaseOperations dbo, String eventTitle){
+        SQLiteDatabase sq = dbo.getWritableDatabase();
+        //String whereCdn = TableInfo.EVENT_NAME + " = " + eventTitle ;
+        ContentValues values = new ContentValues();
+        values.put(TableInfo.EVENT_FINISHED, "yes");
+
+        // updating row
+        sq.update(TableInfo.TABLE_NAME, values, TableInfo.EVENT_NAME + " LIKE ?",
+                new String[] { String.valueOf(eventTitle) });
     }
 
     public void deleteEvent(DataBaseOperations dbo, String eventTitle, String eventFrequency, String duration){
