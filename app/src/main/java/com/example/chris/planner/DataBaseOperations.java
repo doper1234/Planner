@@ -71,8 +71,8 @@ public class DataBaseOperations extends SQLiteOpenHelper {
     public Cursor getInformation(DataBaseOperations dbo, String day, String date){
         SQLiteDatabase sq = dbo.getWritableDatabase();
         String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.EVENT_FINISHED};
-        //String args = "WHERE " + TableInfo.EVENT_FREQUENCY + " =? " + day + " OR " + TableInfo.EVENT_FREQUENCY + " =? " + date;
-        Cursor CR = sq.query(TableInfo.TABLE_NAME, columns, /*args*/null, null, null, null, null);
+        String args =TableInfo.EVENT_FREQUENCY + " LIKE '%"+day+"%' OR " + TableInfo.EVENT_FREQUENCY + " LIKE '%"+date+"%'";
+        Cursor CR = sq.query(TableInfo.TABLE_NAME, columns, args, null, null, null, null);
         return CR;
     }
 
@@ -100,6 +100,18 @@ public class DataBaseOperations extends SQLiteOpenHelper {
                 new String[] { String.valueOf(eventTitle) });
     }
 
+    public void updateEventEdited(DataBaseOperations dbo, String eventTitle, String frequency, String duration){
+        SQLiteDatabase sq = dbo.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(TableInfo.EVENT_NAME, eventTitle);
+        values.put(TableInfo.EVENT_FREQUENCY, frequency);
+        values.put(TableInfo.EVENT_DURATION, duration);
+
+        // updating row
+        sq.update(TableInfo.TABLE_NAME, values, TableInfo.EVENT_NAME + " LIKE ?",
+                new String[] { String.valueOf(eventTitle) });
+    }
+
     public void deleteEvent(DataBaseOperations dbo, String eventTitle, String eventFrequency, String duration){
         SQLiteDatabase sq = dbo.getWritableDatabase();
 
@@ -110,6 +122,16 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         String args[] = {eventTitle};
         sq.delete(TableInfo.TABLE_NAME, TableInfo.EVENT_NAME + "=?", args);
 
+    }
+
+    public void resetFinished(DataBaseOperations dbo){
+        SQLiteDatabase sq = dbo.getWritableDatabase();
+        //String whereCdn = TableInfo.EVENT_NAME + " = " + eventTitle ;
+        ContentValues values = new ContentValues();
+        values.put(TableInfo.EVENT_FINISHED, "no");
+
+        // updating row
+        sq.update(TableInfo.TABLE_NAME, values, null, null);
     }
 
 

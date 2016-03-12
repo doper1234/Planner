@@ -15,10 +15,12 @@ public final class TableData {
 
         public static final String EVENT_NAME = "event_name";
         public static final String EVENT_FREQUENCY = "event_frequency";
+        public static final String INITIAL_EVENT_DURATION = "initial_event_duration";
         public static final String EVENT_DURATION ="event_duration";
         public static final String EVENT_FINISHED ="event_finished";
         public static final String DATABASE_NAME = "daily_events";
         public static final String TABLE_NAME = "events";
+        public static boolean EDITING;
 //        public static final String COLUMN_NAME_ENTRY_ID = "entryid";
 //        public static final String COLUMN_NAME_TITLE = "title";
 //        public static final String COLUMN_NAME_SUBTITLE = "subtitle";

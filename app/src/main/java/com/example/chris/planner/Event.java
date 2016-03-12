@@ -22,6 +22,8 @@ public class Event {
     Context ac;
     String title;
     int duration, newDuration;
+    boolean frequencyIsANumber = false;
+    int frequencyNumber;
 //    MainActivity ma;
     LinearLayout linearLayout;
     LinearLayout buttonsLayout;
@@ -37,9 +39,29 @@ public class Event {
         titleView.setText(title + " ");
         titleView.setTextSize(30);
         titleView.setTextColor(Color.BLACK);
+        try{
+            frequencyNumber = Integer.parseInt(frequency);
+            frequencyIsANumber = true;
+
+        }catch(NumberFormatException e){
+            frequencyIsANumber = false;
+        }
         frequencyView = new TextView(ac);
-        frequencyView.setText(frequency + " ");
+        if(frequencyIsANumber){
+            if(frequencyNumber == 1 || frequencyNumber == 21 || frequencyNumber == 31){
+                frequencyView.setText("Every " + frequency + "st of each month");
+            }else if(frequencyNumber == 2 || frequencyNumber == 22){
+                frequencyView.setText("Every " + frequency + "nd of each month");
+            }else{
+                frequencyView.setText("Every " + frequency + "th of each month");
+            }
+
+        }else{
+            frequencyView.setText(frequency + " ");
+        }
+
         frequencyView.setTextColor(Color.BLACK);
+
         done = new CheckBox(ac);
         edit = new Button(ac);
         edit.setOnClickListener(new View.OnClickListener() {
@@ -52,34 +74,44 @@ public class Event {
 
         delete = new Button(ac);
         delete.setText("delete");
-        finished = new Button(ac);
-        finished.setText("finished");
-        finished.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finishEvent(ma);
-            }
-        });
+        if(!TableData.TableInfo.EDITING){
+            finished = new Button(ac);
+            finished.setText("finished");
+            finished.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishEvent(ma);
+                }
+            });
+        }
+
 
         buttonsLayout = new LinearLayout(ma);
         buttonsLayout.setOrientation(LinearLayout.HORIZONTAL);
         buttonsLayout.addView(edit);
         //buttonsLayout.addView(delete);
-        buttonsLayout.addView(finished);
-
+        if(!TableData.TableInfo.EDITING){
+            buttonsLayout.addView(finished);
+        }
+        this.duration = duration;
         if(duration > 0) {
-            subtractTime = new Button(ac);
-            subtractTime.setText("subtract time");
-            subtractTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    subtractTimeScreen(ma);
-                }
-            });
-            buttonsLayout.addView(subtractTime);
-            this.duration = duration;
+
             durationView = new TextView(ac);
-            durationView.setText(duration + " minutes remaining");
+            if(!TableData.TableInfo.EDITING){
+                durationView.setText(duration + " minutes remaining");
+                subtractTime = new Button(ac);
+                subtractTime.setText("subtract time");
+                subtractTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        subtractTimeScreen(ma);
+                    }
+                });
+                buttonsLayout.addView(subtractTime);
+            }else{
+                durationView.setText(duration + " minutes");
+            }
+
             durationView.setTextColor(Color.BLACK);
         }
 
