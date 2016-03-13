@@ -1,10 +1,21 @@
 package com.example.chris.planner;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -44,7 +55,8 @@ public class MainActivity extends Activity {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
-
+                //new ResetScheduleTimer().start(this);
+                newDay();
                 rl = (RelativeLayout)findViewById(R.id.main);
                 lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 ll = (LinearLayout)findViewById(R.id.linearLayout);
@@ -90,27 +102,29 @@ public class MainActivity extends Activity {
                 });
                 addToPlanner = (Button) findViewById(R.id.addToEventsButton);
                 addToPlanner.setOnClickListener(new View.OnClickListener() {
+                        EditText titleView = (EditText)findViewById(R.id.eventTitle);
+                        String title = titleView.getText().toString();
                         @Override
                         public void onClick(View v) {
-                                String eventName = "";
-                                TextView timeView = (TextView) findViewById(R.id.timeView);
-                                final int duration = timeSeekBar.getProgress();
-                                //now ask if the user wants to add this item
-//                                new AlertDialog.Builder(MainActivity.this)
-//                                        .setTitle("Do you want to add this to your events?")
-//                                        .setMessage(eventName +" every " + frequency + " for " + duration)
-//                                        .setIcon(android.R.drawable.ic_dialog_alert)
-//                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//
-//                                                public void onClick(DialogInterface dialog, int whichButton) {
-//                                                        //add item and return to main screen
-                                                        addNewItem(getFrequency(), duration);
-                                                        mainScreen();
-//                                                }})
-//                                        .setNegativeButton(android.R.string.no, null).show();
+                                new AlertDialog.Builder(ctx)
+                                        .setTitle("Add new event?")
+                                        .setMessage("Add "+ title+" to events?")
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                        final int duration = timeSeekBar.getProgress();
+                                                        if (!getFrequency().equalsIgnoreCase("")) {
+                                                                addNewItem(getFrequency(), duration, false);
+                                                                mainScreen();
+                                                                Toast.makeText(ctx, "Event added!", Toast.LENGTH_LONG).show();
+                                                        }
 
-                        }
+                                                }
+                                        })
+                                        .setNegativeButton(android.R.string.no, null).show();
+
+                      }
                 });
                 cancel = (Button) findViewById(R.id.cancelButton);
                 cancel.setOnClickListener(new View.OnClickListener() {
@@ -129,8 +143,19 @@ public class MainActivity extends Activity {
                 deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                deleteEvent(title, frequency, duration);
-                                mainScreen();
+                                new AlertDialog.Builder(ctx)
+                                        .setTitle("Delete event?")
+                                        .setMessage("Delete "+ title + "?")
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                        deleteEvent(title, frequency, duration);
+                                                        mainScreen();
+                                                        Toast.makeText(ctx, "Event deleted!", Toast.LENGTH_LONG).show();
+                                                }})
+                                        .setNegativeButton(android.R.string.no, null).show();
+
                         }
                 });
                 EditText eventTitle = (EditText) findViewById(R.id.eventTitle);
@@ -169,20 +194,29 @@ public class MainActivity extends Activity {
                 addToPlanner.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                String eventName = "";
-                                TextView timeView = (TextView) findViewById(R.id.timeView);
-                                final int duration = timeSeekBar.getProgress();
-                                //now ask if the user wants to add this item
-//                                new AlertDialog.Builder(MainActivity.this)
-//                                        .setTitle("Do you want to add this to your events?")
-//                                        .setMessage(eventName +" every " + frequency + " for " + duration)
-//                                        .setIcon(android.R.drawable.ic_dialog_alert)
-//                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//
-//                                                public void onClick(DialogInterface dialog, int whichButton) {
-//                                                        //add item and return to main screen
-                                updateItem(getFrequency(), duration);
-                                mainScreen();
+                                new AlertDialog.Builder(ctx)
+                                        .setTitle("Save event?")
+                                        .setMessage("Save "+ title+"?")
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                        final int duration = timeSeekBar.getProgress();
+                                                        if (!getFrequency().equalsIgnoreCase("")) {
+                                                                addNewItem(getFrequency(), duration, true);
+                                                                Toast.makeText(ctx, "yes", Toast.LENGTH_LONG);
+                                                        } else {
+                                                                Toast.makeText(ctx,"nope", Toast.LENGTH_LONG);
+                                                                new AlertDialog.Builder(ctx)
+                                                                        .setTitle("Invalid input")
+                                                                        .setMessage("You must select a day or date first")
+                                                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                                                        .setPositiveButton(android.R.string.yes, null);
+                                                        }
+
+                                                }
+                                        })
+                                        .setNegativeButton(android.R.string.no, null).show();
 //                                                }})
 //                                        .setNegativeButton(android.R.string.no, null).show();10
 
@@ -242,6 +276,16 @@ public class MainActivity extends Activity {
                         sundayCheckBox = (CheckBox) findViewById(R.id.sundayCheckBox);
                         sundayCheckBox.setChecked(true);
                 }
+                try{
+                        Integer.parseInt(frequency);
+                        onceAMonthCheckbox = (CheckBox) findViewById(R.id.onceAMonthCheckBox);
+                        onceAMonthCheckbox.setChecked(true);
+                        EditText specificDateEditText = (EditText) findViewById(R.id. specificDateEditText);
+                        specificDateEditText.setText(frequency);
+                }catch(NumberFormatException e){
+
+                }
+
         }
 
         public void mainScreen(){
@@ -255,9 +299,7 @@ public class MainActivity extends Activity {
                 testButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                DataBaseOperations dbo = new DataBaseOperations(ctx);
-                                dbo.resetFinished(dbo);
-                                mainScreen();
+                                reset();
                         }
                 });
                 back = (Button) findViewById(R.id.backButton);
@@ -267,7 +309,7 @@ public class MainActivity extends Activity {
                                 startActivity(new Intent(MainActivity.this, StartScreen.class));
                                 TableData.TableInfo.EDITING = false;
                                 //new MainActivity(false);
-                                Toast.makeText(MainActivity.this, "main screen", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(MainActivity.this, "main screen", Toast.LENGTH_LONG).show();
                         }
                 });
                 add = (Button) findViewById(R.id.addButton);
@@ -284,62 +326,85 @@ public class MainActivity extends Activity {
                 dateOfTheMonth = splitDate[2];
 
                 loadEvents();
-                Toast.makeText(this, "Today is " + dayOfTheWeek + " " + dateOfTheMonth, Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "Today is " + dayOfTheWeek + " " + dateOfTheMonth, Toast.LENGTH_LONG).show();
                 Log.d("Day of the week", dayOfTheWeek);
                 Log.d("Date of the month", dateOfTheMonth);
 
         }
 
-        private void addNewItem(String frequency, int duration){
+        private void addNewItem(String frequency, int duration, boolean editing){
                 EditText titleView = (EditText)findViewById(R.id.eventTitle);
                 String title = titleView.getText().toString();
                 DataBaseOperations dbo = new DataBaseOperations(ctx);
-                dbo.putInformation(dbo, title, frequency, duration);
+
+                if(editing){
+                        dbo.updateEventEdited(this, dbo, title, frequency, Integer.toString(duration));
+                        mainScreen();
+                        Toast.makeText(ctx, "Event saved!", Toast.LENGTH_LONG).show();
+                }else{
+                        if(!dbo.doesEventNameAlreadyExist(dbo, title)){
+                                dbo.putInformation(this, dbo, title, frequency, duration);
+                                mainScreen();
+                                Toast.makeText(ctx, "Event saved!", Toast.LENGTH_LONG).show();
+                        }
+                }
         }
 
-        private void updateItem(String frequency, int duration){
-                EditText titleView = (EditText)findViewById(R.id.eventTitle);
-                String title = titleView.getText().toString();
-                DataBaseOperations dbo = new DataBaseOperations(ctx);
-                dbo.updateEventEdited(dbo, title, frequency, Integer.toString(duration));
-        }
+//        private void updateItem(String frequency, int duration){
+//                EditText titleView = (EditText)findViewById(R.id.eventTitle);
+//                String title = titleView.getText().toString();
+//                DataBaseOperations dbo = new DataBaseOperations(ctx);
+//                dbo.updateEventEdited(dbo, title, frequency, Integer.toString(duration));
+//        }
 
         private void loadEvents() {
                 DataBaseOperations dbo = new DataBaseOperations(ctx);
-
-
+                TextView noEvents = (TextView) findViewById(R.id.noEventsView);
                 if(TableData.TableInfo.EDITING){
                         Cursor cr = dbo.getInformation(dbo);
-                        cr.moveToFirst();
-                        if(cr.moveToNext()){
-                                do{
-                                        String eventName, eventFrequency, eventFinished;
-                                        int eventDuration;
 
-                                        eventFinished = cr.getString(3);
+                        if(cr.moveToFirst()){
+                                do{
+                                        String eventName, eventFrequency;
+                                        int eventDuration;
                                         eventName = cr.getString(0);
                                         eventFrequency = cr.getString(1);
                                         eventDuration = Integer.parseInt(cr.getString(2));
                                         new Event(this, eventName, eventFrequency, eventDuration);
                                 }while(cr.moveToNext());
+                                noEvents.setVisibility(View.INVISIBLE);
+                        }else{
+                                noEvents.setVisibility(View.VISIBLE);
+                                noEvents.setText("You have no events. Click add to add some!");
                         }
                 }else{
                         Cursor cr = dbo.getInformation(dbo, dayOfTheWeek, dateOfTheMonth);
-                        cr.moveToFirst();
-                        if(cr.moveToNext()){
+                        boolean allFinished = true;
+                        if(cr.moveToFirst()){
                                 do{
                                         String eventName, eventFrequency, eventFinished;
                                         int eventDuration;
 
-                                        eventFinished = cr.getString(3);
+                                        eventFinished = cr.getString(4);
                                         if(eventFinished.equalsIgnoreCase("no")){
                                                 eventName = cr.getString(0);
                                                 eventFrequency = cr.getString(1);
                                                 eventDuration = Integer.parseInt(cr.getString(2));
                                                 new Event(this, eventName, eventFrequency, eventDuration);
+                                                allFinished = false;
                                         }
 
                                 }while(cr.moveToNext());
+                                if(allFinished){
+                                        noEvents.setVisibility(View.VISIBLE);
+                                        noEvents.setText("You have finished all events! Well done!");
+                                }else{
+                                        noEvents.setVisibility(View.INVISIBLE);
+                                }
+
+                        }else{
+                                noEvents.setVisibility(View.VISIBLE);
+                                noEvents.setText("You have no events. Click add to add some!");
                         }
                 }
 
@@ -567,14 +632,93 @@ public class MainActivity extends Activity {
                         frequency = frequency + "sunday ";
                 }
                 if(onceAMonthCheckbox.isChecked()){
-                        frequency = specificDateEditText.getText().toString();
+                        try{
+                            int freq = Integer.parseInt(specificDateEditText.getText().toString());
+                            if(freq >0 && freq < 32){
+                                    frequency = specificDateEditText.getText().toString();
+                            }else{
+                                    new AlertDialog.Builder(ctx)
+                                            .setTitle("Invalid input")
+                                            .setMessage(specificDateEditText.getText().toString() + " is not a valid date.")
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .setPositiveButton(android.R.string.yes, null)
+                                            .show();
+                            }
+                        }catch(NumberFormatException e){
+                                new AlertDialog.Builder(ctx)
+                                        .setTitle("Invalid input")
+                                        .setMessage(specificDateEditText.getText().toString() + " is not a valid date.")
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .setPositiveButton(android.R.string.yes, null)
+                                        .show();
+                        }
+
                 }
 
                 return frequency;
         }
 
+        private void resetEventsDuration(DataBaseOperations dbo){
+                Cursor cr = dbo.getInformation(dbo);
+                cr.moveToFirst();
+                if(cr.moveToNext()){
+                        do{
+                                String eventName;
+                                eventName = cr.getString(0);
+                                dbo.resetDuration(dbo, eventName);
+                        }while(cr.moveToNext());
+                }
+        }
+
         private void deleteEvent(String eventTitle, String eventFrequency, int eventDuration){
                 DataBaseOperations dbo = new DataBaseOperations(ctx);
                 dbo.deleteEvent(dbo, eventTitle, eventFrequency, Integer.toString(eventDuration));
+        }
+
+        public void reset(){
+                DataBaseOperations dbo = new DataBaseOperations(ctx);
+                dbo.resetFinished(dbo);
+                resetEventsDuration(dbo);
+                showNotification();
+        }
+
+        public void showNotification() {
+                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+                Resources r = getResources();
+                Notification notification = new NotificationCompat.Builder(this)
+                        .setTicker(r.getString(R.string.thursday))
+                        .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                        .setContentTitle(r.getString(R.string.notification_title))
+                        .setContentText(r.getString(R.string.notification_text))
+                        .setContentIntent(pi)
+                        .setSound(alarmSound)
+                        .setAutoCancel(true)
+                        .build();
+
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(0, notification);
+                notification.defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE;
+        }
+
+        public void newDay(){
+                Calendar c = Calendar.getInstance();
+                int thisDay = c.get(Calendar.DAY_OF_YEAR);
+                long todayMillis = c.getTimeInMillis();
+
+                SharedPreferences prefs = PreferenceManager
+                        .getDefaultSharedPreferences(this);
+                long last = prefs.getLong("date", System.currentTimeMillis());
+
+                c.setTimeInMillis(last);
+                int lastDay = c.get(Calendar.DAY_OF_YEAR);
+                // Toast.makeText(getApplicationContext(),
+                // "lastday " + lastDay + "thisDay " + thisDay, Toast.LENGTH_LONG)
+                // .show();
+                if (lastDay == thisDay) {
+                        Toast.makeText(MainActivity.this, "Today", Toast.LENGTH_SHORT).show();
+                }else{
+                        reset();
+                }
         }
 }

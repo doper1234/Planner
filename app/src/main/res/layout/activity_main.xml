@@ -63,7 +63,16 @@
         android:text="New Button"
         android:id="@+id/testButton"
         android:layout_alignTop="@+id/backButton"
-        android:layout_alignEnd="@+id/dateView" />
+        android:layout_alignEnd="@+id/dateView"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/noEventsView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

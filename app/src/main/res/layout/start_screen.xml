@@ -5,7 +5,7 @@
     android:weightSum="1">
 
     <Button
-        android:layout_width="375dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Things I have left to do today"
         android:id="@+id/todayButton"
@@ -17,4 +17,11 @@
         android:text="View all scheduled events"
         android:id="@+id/editEventsButton"
         android:layout_weight="0.45" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:id="@+id/settingsButton"
+        android:layout_weight="0.13" />
 </LinearLayout>

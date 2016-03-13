@@ -12,4 +12,6 @@
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
     <string name="duration">0 minutes</string>
+    <string name="notification_title">You have unfinished events</string>
+    <string name="notification_text">Finish the events before its too late!</string>
 </resources>

@@ -19,6 +19,10 @@
         </activity>
         <activity android:name=".MainActivity" >
         </activity>
+        <activity android:name=".Version2" >
+        </activity>
+        <activity android:name=".calendaractivity" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package com.example.chris.planner;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
@@ -156,8 +158,20 @@ public class Event {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateTime(ma);
-                ma.mainScreen();
+                new AlertDialog.Builder(ma)
+                        .setTitle("Update Time?")
+                        .setMessage("Are you sure you want to subtract " + (duration - newDuration) + " from time remaining?")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        updateTime(ma);
+                                        ma.mainScreen();
+                                        Toast.makeText(ma, "Time updated!", Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, null).show();
+
             }
         });
         TextView subtractTitle = (TextView) ma.findViewById(R.id.subtractTitle);
@@ -193,10 +207,21 @@ public class Event {
 
     }
 
-    private void finishEvent(MainActivity ma){
-        DataBaseOperations dbo = new DataBaseOperations(ma);
-        dbo.updateEventFinished(dbo, title);
-        Toast.makeText(ma, "You have finished an event!", Toast.LENGTH_LONG).show();
-        ma.mainScreen();
+    private void finishEvent(final MainActivity ma){
+        new AlertDialog.Builder(ma)
+                .setTitle("Event Finished")
+                .setMessage("Are you sure you've finished "+ title+"?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        DataBaseOperations dbo = new DataBaseOperations(ma);
+                        dbo.updateEventFinished(dbo, title);
+                        Toast.makeText(ma, "You have finished an event!", Toast.LENGTH_LONG).show();
+                        ma.mainScreen();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show();
+
     }
 }

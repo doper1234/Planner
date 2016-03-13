@@ -1,15 +1,19 @@
 package com.example.chris.planner;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.chris.planner.TableData.*;
+
+import java.io.File;
 
 /**
  * Created by Chris on 09/03/2016.
@@ -25,14 +29,24 @@ public class DataBaseOperations extends SQLiteOpenHelper {
                                 TableInfo.EVENT_NAME +" TEXT, " +
                                 TableInfo.EVENT_FREQUENCY + " TEXT, " +
                                 TableInfo.EVENT_DURATION + " INTEGER," +
+                                TableInfo.INITIAL_EVENT_DURATION + " INTEGER," +
                                 TableInfo.EVENT_FINISHED + " TEXT );" ;
 
     public DataBaseOperations(Context context) {
         super(context, TableInfo.DATABASE_NAME, null, database_version);
-        Log.d("Database operations", "Database created");
-        db = getWritableDatabase();
-        //this.db.execSQL(CREATE_QUERY);
-        Log.d("Database operations", "Table created");
+        try{
+            db = getWritableDatabase();
+            this.db.execSQL(CREATE_QUERY);
+        }catch(SQLiteException e){
+//            db = getWritableDatabase();
+//            this.db.execSQL(CREATE_QUERY);
+//            Log.d("Database operations", "Table created");
+        }
+//        if(!doesDatabaseExist(context, TableInfo.DATABASE_NAME)){
+//            this.db.execSQL(CREATE_QUERY);
+//            Log.d("Database operations", "Table created");
+//            putInformation(this,"","",0);
+//        }
     }
 
     @Override
@@ -48,32 +62,41 @@ public class DataBaseOperations extends SQLiteOpenHelper {
 
     }
 
-    public void putInformation(DataBaseOperations dbo, String eventName, String eventFrequency, int eventDuration){
+    public void putInformation(MainActivity ma, DataBaseOperations dbo, String eventName, String eventFrequency, int eventDuration){
 
-        SQLiteDatabase sqlDB = dbo.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(TableInfo.EVENT_NAME, eventName);
-        cv.put(TableInfo.EVENT_FREQUENCY, eventFrequency);
-        cv.put(TableInfo.EVENT_DURATION, eventDuration);
-        cv.put(TableInfo.EVENT_FINISHED, "no");
-        long k = sqlDB.insert(TableInfo.TABLE_NAME, null, cv);
-        Log.d("Database operations", "One raw inserted");
+        if(!doesEventNameAlreadyExist(dbo, eventName)){
+            SQLiteDatabase sqlDB = dbo.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableInfo.EVENT_NAME, eventName);
+            cv.put(TableInfo.EVENT_FREQUENCY, eventFrequency);
+            cv.put(TableInfo.EVENT_DURATION, eventDuration);
+            cv.put(TableInfo.INITIAL_EVENT_DURATION, eventDuration);
+            cv.put(TableInfo.EVENT_FINISHED, "no");
+            long k = sqlDB.insert(TableInfo.TABLE_NAME, null, cv);
+            Log.d("Database operations", "One raw inserted");
+        }else{
+            new AlertDialog.Builder(ma)
+                    .setTitle("Invalid input")
+                    .setMessage(eventName + " already exists. Use a different name")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, null)
+                    .show();
+        }
+
     }
 
     public Cursor getInformation(DataBaseOperations dbo){
         SQLiteDatabase sq = dbo.getWritableDatabase();
         String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.EVENT_FINISHED};
         //String args = "WHERE " + TableInfo.EVENT_FREQUENCY + " =? " + day + " OR " + TableInfo.EVENT_FREQUENCY + " =? " + date;
-        Cursor CR = sq.query(TableInfo.TABLE_NAME, columns, /*args*/null, null, null, null, null);
-        return CR;
+        return sq.query(TableInfo.TABLE_NAME, columns, /*args*/null, null, null, null, null);
     }
 
     public Cursor getInformation(DataBaseOperations dbo, String day, String date){
         SQLiteDatabase sq = dbo.getWritableDatabase();
-        String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.EVENT_FINISHED};
+        String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.INITIAL_EVENT_DURATION,TableInfo.EVENT_FINISHED};
         String args =TableInfo.EVENT_FREQUENCY + " LIKE '%"+day+"%' OR " + TableInfo.EVENT_FREQUENCY + " LIKE '%"+date+"%'";
-        Cursor CR = sq.query(TableInfo.TABLE_NAME, columns, args, null, null, null, null);
-        return CR;
+        return sq.query(TableInfo.TABLE_NAME, columns, args, null, null, null, null);
     }
 
     public void updateTime(DataBaseOperations dbo, String eventTitle, String duration){
@@ -82,7 +105,7 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         //String whereCdn = TableInfo.EVENT_NAME + " = " + eventTitle ;
         ContentValues values = new ContentValues();
         values.put(TableInfo.EVENT_DURATION, duration);
-
+        //values.put(TableInfo.INITIAL_EVENT_DURATION, duration);
         // updating row
         sq.update(TableInfo.TABLE_NAME, values, TableInfo.EVENT_NAME + " LIKE ?",
                 new String[] { String.valueOf(eventTitle) });
@@ -100,16 +123,35 @@ public class DataBaseOperations extends SQLiteOpenHelper {
                 new String[] { String.valueOf(eventTitle) });
     }
 
-    public void updateEventEdited(DataBaseOperations dbo, String eventTitle, String frequency, String duration){
+    public boolean doesEventNameAlreadyExist(DataBaseOperations dbo, String eventTitle){
         SQLiteDatabase sq = dbo.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(TableInfo.EVENT_NAME, eventTitle);
-        values.put(TableInfo.EVENT_FREQUENCY, frequency);
-        values.put(TableInfo.EVENT_DURATION, duration);
+        String[] columns = {TableInfo.EVENT_NAME};
+        String args =TableInfo.EVENT_NAME + " LIKE '"+eventTitle+"' ";
+        Cursor cr = sq.query(TableInfo.TABLE_NAME, columns, args, null, null, null, null);
+        return cr.moveToFirst();
+    }
 
-        // updating row
-        sq.update(TableInfo.TABLE_NAME, values, TableInfo.EVENT_NAME + " LIKE ?",
-                new String[] { String.valueOf(eventTitle) });
+    public void updateEventEdited(MainActivity ma,DataBaseOperations dbo, String eventTitle, String frequency, String duration){
+        //if(!doesEventNameAlreadyExist(dbo, eventTitle)){
+            SQLiteDatabase sq = dbo.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(TableInfo.EVENT_NAME, eventTitle);
+            values.put(TableInfo.EVENT_FREQUENCY, frequency);
+            values.put(TableInfo.EVENT_DURATION, duration);
+            values.put(TableInfo.INITIAL_EVENT_DURATION, duration);
+
+            // updating row
+            sq.update(TableInfo.TABLE_NAME, values, TableInfo.EVENT_NAME + " LIKE ?",
+                    new String[]{String.valueOf(eventTitle)});
+//        }else{
+//            new AlertDialog.Builder(ma)
+//                    .setTitle("Invalid input")
+//                    .setMessage(eventTitle + " already exists. Use a different name")
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .setPositiveButton(android.R.string.yes, null)
+//                    .show();
+//        }
+
     }
 
     public void deleteEvent(DataBaseOperations dbo, String eventTitle, String eventFrequency, String duration){
@@ -134,5 +176,25 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         sq.update(TableInfo.TABLE_NAME, values, null, null);
     }
 
+    public  void resetDuration(DataBaseOperations dbo, String eventTitle){
+        SQLiteDatabase sq = dbo.getWritableDatabase();
+        String initialDuration = "";
+        String[] columns = {TableInfo.INITIAL_EVENT_DURATION};
+        String args =TableInfo.EVENT_NAME + " LIKE '%"+eventTitle+"%' ";
+        Cursor cr = sq.query(TableInfo.TABLE_NAME, columns, args, null, null, null, null);
+        while (cr.moveToNext()){
+            initialDuration = cr.getString(0);
+        }
+
+        Log.d("Reset Duration",initialDuration);
+
+        ContentValues values = new ContentValues();
+        values.put(TableInfo.EVENT_DURATION, initialDuration);
+
+        // updating row
+        sq.update(TableInfo.TABLE_NAME, values, TableInfo.EVENT_NAME + " LIKE ?",
+                new String[]{String.valueOf(eventTitle)});
+
+    }
 
 }
