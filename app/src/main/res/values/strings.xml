@@ -1,17 +1,39 @@
 <resources>
     <string name="app_name">Planner</string>
+
+    <string name="todays_events_button">Things I have left to do today</string>
+    <string name="database_button">View all scheduled events</string>
+    <string name="settings_button">settings</string>
+
     <string name="current_date">January 5th, 2016</string>
     <string name="add_button">+add</string>
+    <string name="no_events">You have no events. Click add to add some!</string>
+    <string name="events_all_finished">You have finished all events! Well done!</string>
+    <string name="back_button">back</string>
+
     <string name="default_field_name">Event Name</string>
     <string name="frequency">How often do you want to do this?</string>
-    <string name="everyday">Monday</string>
-    <string name="every_other_day">Tuesday</string>
-    <string name="once_a_week">Wednesday</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
     <string name="thursday">Thursday</string>
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
+    <string name="once_a_month">Once a month?</string>
+    <string name="enter_date">Enter Date</string>
+    <string name="duration_question">Duration?</string>
     <string name="duration">0 minutes</string>
+    <string name="minutes">minutes</string>
+    <string name="add_to_planner">Add to planner</string>
+    <string name="cancel_button">cancel</string>
+
+    <string name="edit_button">edit</string>
+    <string name="finished_button">finished</string>
+    <string name="subtract_time_button">subtract time</string>
+    <string name="save_button">save</string>
+    <string name="delete_button">delete event</string>
+
     <string name="notification_title">You have unfinished events</string>
     <string name="notification_text">Finish the events before its too late!</string>
 </resources>

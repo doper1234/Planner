@@ -242,7 +242,7 @@ public class MainActivity extends Activity {
                 }else if (minutes >=60){
                         timeView.setText(hours + " hour " + minutes % 60 + " minutes");
                 }else{
-                        timeView.setText(minutes + " minutes");
+                        timeView.setText(minutes + " " + getResources().getText(R.string.minutes));
                 }
         }
 

@@ -52,7 +52,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="back"
+        android:text="@string/back_button"
         android:id="@+id/backButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
@@ -69,7 +69,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/no_events"
         android:id="@+id/noEventsView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />

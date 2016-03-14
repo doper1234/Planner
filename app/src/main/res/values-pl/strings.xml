@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Planista</string>
+    <string name="current_date">Styczen 5, 2016</string>
+    <string name="add_button">+dodaj</string>
+    <string name="default_field_name">Event Name</string>
+    <string name="frequency">Jak często chcesz tego robic?</string>
+    <string name="monday">Poniedziałek</string>
+    <string name="tuesday">Wtorek</string>
+    <string name="wednesday">Srodek</string>
+    <string name="thursday">Czwartek</string>
+    <string name="friday">Piątek</string>
+    <string name="saturday">Sobota</string>
+    <string name="sunday">Niedziela</string>
+    <string name="once_a_month">Raz na miesiąc?</string>
+    <string name="enter_date">Enter Data</string>
+    <string name="duration_question">Za ile?</string>
+    <string name="duration">0 minuty</string>
+    <string name="minutes">minuty</string>
+    <string name="add_to_planner">Dodaj do planista</string>
+    <string name="cancel_button">anuluj</string>
+
+    <string name="todays_events_button">Rzeczy któy jeszcze nie zrobiłem dzisiaj</string>
+    <string name="database_button">View all scheduled events</string>
+    <string name="settings_button">ustawenia</string>
+
+    <string name="no_events">Nie masz wydarzenie. Klinij dodaj żeby dać wydarzenia!</string>
+    <string name="events_all_finished">You have finished all events! Well done!</string>
+    <string name="back_button">wrocić</string>
+
+    <string name="edit_button">edituj</string>
+    <string name="finished_button">finished</string>
+    <string name="subtract_time_button">subtract time</string>
+    <string name="save_button">zapis</string>
+    <string name="delete_button">delete event</string>
+
+    <string name="notification_title">Masz unfinished events</string>
+    <string name="notification_text">Finish the events before its too late!</string>
+
+</resources>

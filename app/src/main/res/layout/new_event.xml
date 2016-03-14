@@ -26,19 +26,19 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/everyday"
+        android:text="@string/monday"
         android:id="@+id/mondayCheckBox" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/every_other_day"
+        android:text="@string/tuesday"
         android:id="@+id/tuesdayCheckBox" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/once_a_week"
+        android:text="@string/wednesday"
         android:id="@+id/wednesdayCheckBox" />
 
     <CheckBox
@@ -68,7 +68,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Once a month?"
+        android:text="@string/once_a_month"
         android:id="@+id/onceAMonthCheckBox" />
 
     <EditText
@@ -78,13 +78,13 @@
         android:ems="10"
         android:id="@+id/specificDateEditText"
         android:layout_gravity="center_horizontal"
-        android:text="Enter date" />
+        android:text="@string/enter_date" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Duration?"
+        android:text="@string/duration_question"
         android:id="@+id/durationView" />
 
     <SeekBar
@@ -104,19 +104,19 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add to Planner"
+        android:text="@string/add_to_planner"
         android:id="@+id/addToEventsButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="cancel"
+        android:text="@string/cancel_button"
         android:id="@+id/cancelButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete event"
+        android:text="@string/delete_button"
         android:id="@+id/deleteButton"
         android:visibility="invisible" />
 

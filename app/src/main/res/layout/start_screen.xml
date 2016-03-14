@@ -7,21 +7,21 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Things I have left to do today"
+        android:text="@string/todays_events_button"
         android:id="@+id/todayButton"
         android:layout_weight="0.45" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View all scheduled events"
+        android:text="@string/database_button"
         android:id="@+id/editEventsButton"
         android:layout_weight="0.45" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="@string/settings_button"
         android:id="@+id/settingsButton"
         android:layout_weight="0.13" />
 </LinearLayout>
