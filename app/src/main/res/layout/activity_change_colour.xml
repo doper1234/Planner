@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.chris.planner.ChangeColour">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel_button"
+        android:id="@+id/colourBackButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/colour_title"
+        android:id="@+id/colourTitleView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/button_colour"
+        android:id="@+id/buttonColourView"
+        android:layout_alignTop="@+id/textView4"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/background_colour"
+        android:id="@+id/backgroundColourView"
+        android:layout_below="@+id/bForegroundView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/empty"
+        android:textSize="@dimen/empty_size"
+        android:id="@+id/textView4"
+        android:layout_below="@+id/colourTitleView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/empty"
+        android:textSize="@dimen/empty_size"
+        android:id="@+id/textView7"
+        android:layout_below="@+id/backgroundColourView"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/apply"
+        android:id="@+id/applyButton"
+        android:layout_alignTop="@+id/colourBackButton"
+        android:layout_alignParentStart="true"
+        android:focusable="false"
+        android:clickable="false" />
+
+    <!--<selector-->
+        <!--android:id="@+id/colourSelector"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignEnd="@+id/backgroundColourView"-->
+        <!--android:layout_below="@+id/textView7"-->
+        <!--android:layout_above="@+id/linearLayout2">-->
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="R"
+        android:id="@+id/rBackGroundView"
+        android:layout_below="@+id/backgroundColourView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="G"
+        android:id="@+id/gBackgroundView"
+        android:layout_below="@+id/rBackGroundView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="B"
+        android:id="@+id/bBackGroundView"
+        android:layout_below="@+id/gBackgroundView"
+        android:layout_alignParentStart="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarGBackground"
+        android:layout_above="@+id/bBackGroundView"
+        android:layout_alignEnd="@+id/colourBackButton"
+        android:layout_below="@+id/rBackGroundView"
+        android:layout_toEndOf="@+id/rBackGroundView" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarRBackground"
+        android:layout_above="@+id/seekBarGBackground"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/rBackGroundView"
+        android:layout_toEndOf="@+id/rBackGroundView" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarBBackground"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/seekBarGBackground"
+        android:layout_toEndOf="@+id/bBackGroundView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_to_default"
+        android:id="@+id/colourResetToDefaultButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarRButton"
+        android:layout_above="@+id/textView12"
+        android:layout_alignEnd="@+id/colourBackButton"
+        android:layout_below="@+id/buttonColourView"
+        android:layout_toEndOf="@+id/textView11" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarGButton"
+        android:layout_alignTop="@+id/textView12"
+        android:layout_alignEnd="@+id/colourBackButton"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_toEndOf="@+id/textView12" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarBButton"
+        android:layout_below="@+id/textView12"
+        android:layout_alignEnd="@+id/seekBarGButton"
+        android:layout_above="@+id/foregroundColourView"
+        android:layout_toEndOf="@+id/textView12" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="R"
+        android:id="@+id/textView11"
+        android:layout_below="@+id/buttonColourView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="G"
+        android:id="@+id/textView12"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView11"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="B"
+        android:id="@+id/bButtonView"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView12"
+        android:layout_alignParentLeft="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/bBackGroundView"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/colourBackButton"
+        android:id="@+id/sampleBackground"
+        android:background="#ffd5d5">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/title"
+            android:id="@+id/titleSampleView"
+            android:layout_above="@+id/sampleEventView"
+            android:layout_alignParentStart="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/sampleForeground"
+            android:background="#ff9090"
+            android:layout_toEndOf="@+id/titleSampleView"
+            android:layout_below="@+id/titleSampleView">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/sample_event"
+                android:id="@+id/sampleEventView"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sample"
+                android:id="@+id/sampleButton"
+                android:background="#ff7d7d"
+                android:layout_gravity="center_horizontal"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/foreground_colour"
+        android:id="@+id/foregroundColourView"
+        android:layout_below="@+id/bButtonView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="R"
+        android:id="@+id/rForegroundView"
+        android:layout_below="@+id/foregroundColourView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="G"
+        android:id="@+id/gForeGroundView"
+        android:layout_below="@+id/rForegroundView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="B"
+        android:id="@+id/bForegroundView"
+        android:layout_below="@+id/gForeGroundView"
+        android:layout_alignParentStart="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarRForeground"
+        android:layout_alignEnd="@+id/seekBarBButton"
+        android:layout_below="@+id/foregroundColourView"
+        android:layout_toEndOf="@+id/rForegroundView" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarGForeground"
+        android:layout_below="@+id/seekBarRForeground"
+        android:layout_alignEnd="@+id/seekBarBButton"
+        android:layout_toEndOf="@+id/rForegroundView"
+        android:layout_above="@+id/bForegroundView" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarBForeground"
+        android:layout_alignEnd="@+id/seekBarBButton"
+        android:layout_below="@+id/gForeGroundView"
+        android:layout_toEndOf="@+id/bForegroundView" />
+
+
+    <!--</selector>-->
+
+</RelativeLayout>
