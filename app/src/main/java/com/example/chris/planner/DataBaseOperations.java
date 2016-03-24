@@ -1,5 +1,6 @@
 package com.example.chris.planner;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,6 +33,8 @@ public class DataBaseOperations extends SQLiteOpenHelper {
                                 TableInfo.INITIAL_EVENT_DURATION + " INTEGER," +
                                 TableInfo.EVENT_FINISHED + " TEXT );" ;
 
+
+
     public DataBaseOperations(Context context) {
         super(context, TableInfo.DATABASE_NAME, null, database_version);
         try{
@@ -62,7 +65,28 @@ public class DataBaseOperations extends SQLiteOpenHelper {
 
     }
 
-    public void putInformation(MainActivity ma, DataBaseOperations dbo, String eventName, String eventFrequency, int eventDuration){
+    public void createDayTable(String dayOfTheWeek, int dateOfTheMonth, String month, int year){
+        String TABLE_NAME = dayOfTheWeek + ", " + month + " " + dateOfTheMonth + ", " + year;
+        String CREATE_DATE_EVENT_INFO_QUERY = "CREATE TABLE " +
+                TABLE_NAME +" ( " +
+                TableInfo.EVENT_NAME +" TEXT, " +
+                TableInfo.EVENT_FREQUENCY + " TEXT, " +
+                TableInfo.EVENT_DURATION + " INTEGER," +
+                TableInfo.INITIAL_EVENT_DURATION + " INTEGER," +
+                TableInfo.EVENT_FINISHED + " TEXT );" ;
+
+        db.execSQL(CREATE_DATE_EVENT_INFO_QUERY);
+
+    }
+
+    public Cursor getDayTableInformation(DataBaseOperations dbo, String dayOfTheWeek, int dateOfTheMonth, String month, int year){
+        SQLiteDatabase sq = dbo.getWritableDatabase();
+        String TABLE_NAME = dayOfTheWeek + ", " + month + " " + dateOfTheMonth + ", " + year;
+        String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.EVENT_FINISHED};
+        return sq.query(TABLE_NAME, columns, null, null, null, null, null);
+    }
+
+    public void putInformation(Activity ma, DataBaseOperations dbo, String eventName, String eventFrequency, int eventDuration){
 
         if(!doesEventNameAlreadyExist(dbo, eventName)){
             SQLiteDatabase sqlDB = dbo.getWritableDatabase();
@@ -131,7 +155,7 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         return cr.moveToFirst();
     }
 
-    public void updateEventEdited(MainActivity ma,DataBaseOperations dbo, String eventTitle, String frequency, String duration){
+    public void updateEventEdited(Activity ma,DataBaseOperations dbo, String eventTitle, String frequency, String duration){
         //if(!doesEventNameAlreadyExist(dbo, eventTitle)){
             SQLiteDatabase sq = dbo.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -176,7 +200,7 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         sq.update(TableInfo.TABLE_NAME, values, null, null);
     }
 
-    public  void resetDuration(DataBaseOperations dbo, String eventTitle){
+    public void resetDuration(DataBaseOperations dbo, String eventTitle){
         SQLiteDatabase sq = dbo.getWritableDatabase();
         String initialDuration = "";
         String[] columns = {TableInfo.INITIAL_EVENT_DURATION};
@@ -195,6 +219,10 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         sq.update(TableInfo.TABLE_NAME, values, TableInfo.EVENT_NAME + " LIKE ?",
                 new String[]{String.valueOf(eventTitle)});
 
+    }
+
+    public void deleteDatabase(){
+        db.delete(TableInfo.TABLE_NAME, null, null);
     }
 
 }

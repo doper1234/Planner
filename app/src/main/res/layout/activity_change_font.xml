@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.chris.planner.ChangeFont">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/font_title"
+        android:id="@+id/fontTitleView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/button_font"
+        android:id="@+id/buttonFontView"
+        android:layout_below="@+id/fontTitleView"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/fontCancelButton"
+        android:textAlignment="center" />
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:id="@+id/buttonFontPicker"
+        android:layout_below="@+id/buttonFontView"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/fontCancelButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/event_font"
+        android:id="@+id/eventFontView"
+        android:layout_below="@+id/buttonFontPicker"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/fontCancelButton"
+        android:textAlignment="center" />
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:id="@+id/eventFontPicker"
+        android:layout_below="@+id/eventFontView"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/buttonFontPicker" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/title_font"
+        android:id="@+id/titleFontView"
+        android:layout_below="@+id/eventFontPicker"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:textAlignment="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel_button"
+        android:id="@+id/fontCancelButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/apply"
+        android:id="@+id/fontApplyButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_to_default"
+        android:id="@+id/fontResetButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fontCancelButton"
+        android:id="@+id/backgroundLayout"
+        android:layout_toEndOf="@+id/fontTitleView"
+        android:layout_below="@+id/titleFontPicker"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/title"
+            android:id="@+id/fontSampleTitleView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/fontSampleTitleView"
+            android:layout_toEndOf="@+id/fontSampleTitleView"
+            android:background="@color/foreground_colour"
+            android:id="@+id/foregroundLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/sample_event"
+                android:id="@+id/fontSampleEventView"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sample_button"
+                android:id="@+id/fontSampleButton"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:id="@+id/titleFontPicker"
+        android:layout_below="@+id/titleFontView"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/eventFontPicker" />
+</RelativeLayout>

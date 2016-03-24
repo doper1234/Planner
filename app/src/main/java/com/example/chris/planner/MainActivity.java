@@ -370,7 +370,7 @@ public class MainActivity extends Activity {
                                         eventName = cr.getString(0);
                                         eventFrequency = cr.getString(1);
                                         eventDuration = Integer.parseInt(cr.getString(2));
-                                        new Event(this, eventName, eventFrequency, eventDuration);
+                                        new Event(this, eventName, eventFrequency, eventDuration, ll);
                                 }while(cr.moveToNext());
                                 noEvents.setVisibility(View.INVISIBLE);
                         }else{
@@ -390,7 +390,7 @@ public class MainActivity extends Activity {
                                                 eventName = cr.getString(0);
                                                 eventFrequency = cr.getString(1);
                                                 eventDuration = Integer.parseInt(cr.getString(2));
-                                                new Event(this, eventName, eventFrequency, eventDuration);
+                                                new Event(this, eventName, eventFrequency, eventDuration, ll);
                                                 allFinished = false;
                                         }
 

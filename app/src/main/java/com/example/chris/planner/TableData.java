@@ -2,6 +2,10 @@ package com.example.chris.planner;
 
 import android.provider.BaseColumns;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * Created by Chris on 09/03/2016.
  */
@@ -21,9 +25,76 @@ public final class TableData {
         public static final String DATABASE_NAME = "daily_events";
         public static final String TABLE_NAME = "events";
         public static boolean EDITING;
+        public static boolean DISPLAY_ONLY;
 //        public static final String COLUMN_NAME_ENTRY_ID = "entryid";
 //        public static final String COLUMN_NAME_TITLE = "title";
 //        public static final String COLUMN_NAME_SUBTITLE = "subtitle";
+    }
+
+    public static String dayOfTheWeek(){
+        DateFormat df = new SimpleDateFormat("EEEE, LLLL d, yyyy");
+        Calendar calobj = Calendar.getInstance();
+        String[] getDateInfo;
+        getDateInfo = df.format(calobj.getTime()).toString().split(",");
+        String dayOfTheWeek = getDateInfo[0];
+
+        return dayOfTheWeek;
+    }
+
+    public static String yesterdayOfTheWeek(){
+        DateFormat df = new SimpleDateFormat("EEEE, LLLL d, yyyy");
+        Calendar calobj = Calendar.getInstance();
+        String[] getDateInfo;
+        getDateInfo = df.format(calobj.getTime()).toString().split(",");
+        String dayOfTheWeek = getDateInfo[0];
+
+        return getYesterday(dayOfTheWeek);
+    }
+
+    public static String dateOfTheMonth(){
+        DateFormat df = new SimpleDateFormat("EEEE, LLLL d, yyyy");
+        Calendar calobj = Calendar.getInstance();
+        String[] getDateInfo;
+        getDateInfo = df.format(calobj.getTime()).toString().split(",");
+        String splitDate[] = getDateInfo[1].split(" ");
+        String dateOfTheMonth = splitDate[2];
+
+        return dateOfTheMonth;
+    }
+
+    public static String yesterdayDateOfTheMonth(){
+        DateFormat df = new SimpleDateFormat("EEEE, LLLL d, yyyy");
+        Calendar calobj = Calendar.getInstance();
+        String[] getDateInfo;
+        getDateInfo = df.format(calobj.getTime()).toString().split(",");
+        String splitDate[] = getDateInfo[1].split(" ");
+        int dateOfTheMonth = Integer.parseInt(splitDate[2]);
+        dateOfTheMonth -=1;
+
+        String result = Integer.toString(dateOfTheMonth);
+
+        return result;
+    }
+
+    private static  String getYesterday(String day){
+        String result = "";
+
+        if(day.equalsIgnoreCase("sunday")){
+            result = "saturday";
+        }else if(day.equalsIgnoreCase("monday")){
+            result = "sunday";
+        }else if(day.equalsIgnoreCase("tuesday")){
+            result = "monday";
+        }else if(day.equalsIgnoreCase("wednesday")){
+            result = "tuesday";
+        }else if(day.equalsIgnoreCase("thursday")){
+            result = "wednesday";
+        }else if(day.equalsIgnoreCase("friday")){
+            result = "thursday";
+        }else if(day.equalsIgnoreCase("saturday")){
+            result = "friday";
+        }
+        return result;
     }
 //
 //    private static final String TEXT_TYPE = " TEXT";

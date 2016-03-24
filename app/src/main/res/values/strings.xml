@@ -1,16 +1,63 @@
 <resources>
+    <!-- app name string-->
     <string name="app_name">Planner</string>
 
-    <string name="todays_events_button">Things I have left to do today</string>
+    <!-- settings strings-->
+    <string name="change_colour">Change colours</string>
+    <string name="change_font">Change font</string>
+    <string name="delete_everything">Delete all events</string>
+    <string name="view_all_events">View all events</string>
+    <string name ="transfer_data_over_bluetooth">Transfer events over bluetooth</string>
+    <string name="settings_button">Settings</string>
     <string name="database_button">View all scheduled events</string>
-    <string name="settings_button">settings</string>
 
+    <!-- calendar screen strings-->
+    <string name ="planned_on_this_day">For this day you have planned:</string>
+    <string name ="planned_on_this_yesterday">On this day you had planned:</string>
+
+    <!-- history screen strings-->
+    <string name="history">History</string>
+    <string name="unfinishedEventsYesterday">Congratulations! You finished everything yesterday!</string>
+    <string name="finished_events_today">You have no finished events today.</string>
+    <string name="back_to_today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="today_history">Events you have finished today</string>
+    <string name="yesterday_history">Unfinished events from yesterday</string>
+
+    <!-- colour settings strings-->
+    <string name="colour_title">Colour settings</string>
+    <string name="button_colour">Button Colour</string>
+    <string name="foreground_colour">Foreground Colour</string>
+    <string name="background_colour">Background Colour</string>
+    <string name="sample_button">Button</string>
+    <string name="apply">Apply</string>
+    <string name="reset_to_default">Reset to default</string>
+    <string name="sample_event">Sample event</string>
+    <string name="title">Title</string>
+    <string name="empty"></string>
+
+    <!-- font settings strings-->
+    <string name="font_title">Font Settings</string>
+    <string name="button_font">Button Font</string>
+    <string name="title_font">Title Font</string>
+    <string name="event_font">Event Font</string>
+
+    <!-- bluetooth settings strings-->
+    <string name="bluetooth_title">Send your events over bluetooth</string>
+    <string name="search">Bluetooth on</string>
+    <string name="partner_address">Enter partner\'s Bluetooth Address</string>
+    <string name="transfer_button">Transfer Events</string>
+    <string name="connect_to_partner_button">Connect to partner</string>
+
+    <!-- main screen strings-->
+    <string name="todays_events_button">Things I have left to do today</string>
     <string name="current_date">January 5th, 2016</string>
     <string name="add_button">+add</string>
     <string name="no_events">You have no events. Click add to add some!</string>
     <string name="events_all_finished">You have finished all events! Well done!</string>
     <string name="back_button">back</string>
 
+    <!-- event screen strings-->
     <string name="default_field_name">Event Name</string>
     <string name="frequency">How often do you want to do this?</string>
     <string name="monday">Monday</string>
@@ -28,12 +75,15 @@
     <string name="add_to_planner">Add to planner</string>
     <string name="cancel_button">cancel</string>
 
+    <!-- event item strings-->
     <string name="edit_button">edit</string>
     <string name="finished_button">finished</string>
     <string name="subtract_time_button">subtract time</string>
     <string name="save_button">save</string>
     <string name="delete_button">delete event</string>
 
+    <!-- system notification strings-->
     <string name="notification_title">You have unfinished events</string>
     <string name="notification_text">Finish the events before its too late!</string>
+    <string name="title_activity_history">History</string>
 </resources>

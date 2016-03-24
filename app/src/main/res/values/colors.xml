@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="scrollingBackground">#edf6ff</color>
+
+
+    <color name="warning_colour">#FF0000</color>
+
+    <color name="background_colour">#FF0000</color>
+    <color name="foreground_colour">#edf6ff</color>
+    <color name="button_colour">#FF0000</color>
 </resources>

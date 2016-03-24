@@ -1,0 +1,26 @@
+check if database exists - solved with try catch
+reset events at midnight - checks when you open mainactivity if today is the same
+                            as the day was when you last used the mainactivity
+
+
+event reminder default time 8 pm
+previous days unfinished events + remaining time
+
+customize colours, font
+images for events, custom app icon 
+calendar
+order events by dragging, or buttons up and down
+add reminder option
+transfer to another device
+move to tomorrow, once or permenantly
+
+
+
+bugs
+you can rename an event in edit mode to anything, so duplicates
+can occur. This is bad because when deleting an event it searching
+for matches with the same name.
+
+renaming event no longer saves.
+
+subtract time doesn't finish an event.
