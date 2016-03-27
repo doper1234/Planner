@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,23 +34,34 @@ public class BluetoothConnection {
     private Set<BluetoothDevice>pairedDevices;
     private LinearLayout ll;
     private String lookingForAddress = "";
-    public BluetoothConnection(Activity a){
+    private UUID uuidToUse;
+    private BluetoothServer bluetoothServer;
+    public BluetoothConnection(Activity a, LinearLayout ll){
         activity = a;
         BA = BluetoothAdapter.getDefaultAdapter();
+        TextView bluetoothDevice = new TextView(activity);
+        bluetoothDevice.setText("Your bluetooth address: " + BA.getAddress() + ". Enter this in your partner's device and press connect.");
+        ll.addView(bluetoothDevice);
+        if (!BA.isEnabled()) {
+            Intent turnOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            activity.startActivityForResult(turnOn, 0);
+            Toast.makeText(activity.getApplicationContext(), "Bluetooth turned on", Toast.LENGTH_LONG).show();
+        } else{
+            Toast.makeText(activity.getApplicationContext(),"Bluetooth already on", Toast.LENGTH_LONG).show();
+        }
     }
     public void startBluetoothSearch(LinearLayout layout, String lookingForAddress){
 
 
         this.lookingForAddress = lookingForAddress;
         ll = layout;
-        try{
-            deviceToConnectTo = BA.getRemoteDevice(lookingForAddress);
+        deviceToConnectTo = BA.getRemoteDevice(lookingForAddress);
+        if(deviceToConnectTo.getName() !=null){
             TextView bluetoothDeviceView = new TextView(activity);
             bluetoothDeviceView.setText(deviceToConnectTo.getName() + " with address of " + deviceToConnectTo.getAddress() + " found already paired. Click transfer to transfer data!");
             layout.addView(bluetoothDeviceView);
 
-
-        }catch(Exception e){
+        }else{
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             activity.registerReceiver(mReceiver, filter);
 
@@ -59,7 +72,9 @@ public class BluetoothConnection {
 
             filter = new IntentFilter( BluetoothAdapter.ACTION_DISCOVERY_STARTED );
             activity.registerReceiver( mReceiver, filter );
+
         }
+
 //
 //// Get the local Bluetooth adapter
         //BA = BluetoothAdapter.getDefaultAdapter();
@@ -71,14 +86,14 @@ public class BluetoothConnection {
 ////            Intent enableBtIntent = new Intent( BluetoothAdapter.ACTION_REQUEST_ENABLE );
 ////            activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT );
 ////        }
-        if (!BA.isEnabled()) {
-            Intent turnOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            activity.startActivityForResult(turnOn, 0);
-            Toast.makeText(activity.getApplicationContext(), "Bluetooth turned on", Toast.LENGTH_LONG).show();
-        } else
-        {
-            Toast.makeText(activity.getApplicationContext(),"Bluetooth already on", Toast.LENGTH_LONG).show();
-        }
+//        if (!BA.isEnabled()) {
+//            Intent turnOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            activity.startActivityForResult(turnOn, 0);
+//            Toast.makeText(activity.getApplicationContext(), "Bluetooth turned on", Toast.LENGTH_LONG).show();
+//        } else
+//        {
+//            Toast.makeText(activity.getApplicationContext(),"Bluetooth already on", Toast.LENGTH_LONG).show();
+//        }
         pairedDevices = BA.getBondedDevices();
         for(BluetoothDevice bt : pairedDevices){
             TextView bluetoothDevice = new TextView(activity);
@@ -86,9 +101,7 @@ public class BluetoothConnection {
             layout.addView(bluetoothDevice);
             Log.d(bt.getName(), bt.getAddress());
         }
-        TextView bluetoothDevice = new TextView(activity);
-        bluetoothDevice.setText("Your bluetooth address: " + BA.getAddress() + ". Enter this in your partner's device and press connect.");
-        layout.addView(bluetoothDevice);
+
         BA.startDiscovery();
     }
 
@@ -112,16 +125,63 @@ public class BluetoothConnection {
     }
 
     public void sendEvents(){
-        ParcelUuid[] deviceUUIDS = deviceToConnectTo.getUuids();
-        for (int i = 0; i < deviceUUIDS.length; i++) {
-            TextView t = new TextView(activity);
-            t.setText(deviceUUIDS[i].toString());
-            ll.addView(t);
-        }
-        UUID uuid = UUID.fromString(deviceUUIDS[deviceUUIDS.length-1].toString());
-        BluetoothServer bluetoothServer = new BluetoothServer(activity,ll, uuid);
-        bluetoothServer.start();
+//        String TAG = "BluetoothDebug";
+//        final UUID MY_UUID = UUID.fromString("0000110E-0000-1000-8000-00805F9B34FB");
+//        BluetoothDevice device = deviceToConnectTo;
+//        if(device.getBondState()==device.BOND_BONDED) {
+//            Log.d(TAG, device.getName());
+//            BluetoothSocket mSocket = null;
+//            try {
+//                mSocket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
+//            } catch (IOException e1) {
+//                // TODO Auto-generated catch block
+//                Log.d(TAG, "socket not created");
+//                e1.printStackTrace();
+//            }
+//            try {
+//                mSocket.connect();
+//            } catch (IOException e) {
+//                try {
+//                    mSocket.close();
+//                    Log.d(TAG, "Cannot connect");
+//                } catch (IOException e1) {
+//                    Log.d(TAG, "Socket not closed");
+//                    e1.printStackTrace();
+//                }
+//            }
+//        }
+//        ParcelUuid[] deviceUUIDS = deviceToConnectTo.getUuids();
+////        for (int i = 0; i < deviceUUIDS.length; i++) {
+////            TextView t = new TextView(activity);
+////            t.setText(deviceUUIDS[i].toString());
+////            ll.addView(t);
+////        }
+//        uuidToUse = UUID.fromString(deviceUUIDS[deviceUUIDS.length-1].toString());
+//        BluetoothServer bluetoothServer = new BluetoothServer(activity,ll, uuidToUse);
+//        //bluetoothServer.start(bluetoothServer.run());
+//        bluetoothServer.run();
 
+        bluetoothServer = new BluetoothServer(BA, null, true, activity, ll);
+
+    }
+
+    public void receiveConnection(String bluetoothAddress){
+        bluetoothServer = new BluetoothServer(BA, bluetoothAddress, false, activity, ll);
+
+//        sendEvents();
+//        BluetoothDevice bt = BA.getRemoteDevice(bluetoothAddress);
+//        BluetoothSocket bluetoothSocket;
+//        try {
+//            bluetoothSocket = bt.createRfcommSocketToServiceRecord(uuidToUse);
+//            bluetoothSocket.connect();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    public void sendMessage(String message){
+        bluetoothServer.sendMessage(message);
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -142,6 +202,7 @@ public class BluetoothConnection {
                 if(device.getAddress().equalsIgnoreCase(lookingForAddress)){
                     t1.setText("Found your device! Wait to complete pairing...");
                     device.createBond();
+                    deviceToConnectTo = device;
                     BA.cancelDiscovery();
 //                    BluetoothDevice bd = BA.getRemoteDevice(lookingForAddress);
                     //t2.setText("Uuids " +  bd.getUuids().toString());

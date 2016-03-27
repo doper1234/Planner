@@ -285,6 +285,14 @@ public class ChangeColour extends AppCompatActivity {
 //                applyButton.setText(rl.getDrawingCacheBackgroundColor() + " color" + background);
             }
         });
+        Button defaultsButton = (Button) findViewById(R.id.colourResetToDefaultButton);
+        defaultsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Colours.resetColours();
+                setColours();
+            }
+        });
         Button backButton = (Button) findViewById(R.id.colourBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,6 +312,10 @@ public class ChangeColour extends AppCompatActivity {
         applyButton.setBackgroundColor(Colours.buttonColour);
         backButton.setBackgroundColor(Colours.buttonColour);
         resetButton.setBackgroundColor(Colours.buttonColour);
+
+        findViewById(R.id.sampleBackground).setBackgroundColor(Color.WHITE);//Colours.backgroundColour);
+        findViewById(R.id.sampleForeground).setBackgroundColor(Color.WHITE);//Colours.foregroundColour);
+        findViewById(R.id.sampleButton).setBackgroundColor(Color.WHITE);//Colours.buttonColour);
     }
 
     private int[] setRGB(int colour){

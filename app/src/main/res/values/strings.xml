@@ -46,8 +46,12 @@
     <string name="bluetooth_title">Send your events over bluetooth</string>
     <string name="search">Bluetooth on</string>
     <string name="partner_address">Enter partner\'s Bluetooth Address</string>
-    <string name="transfer_button">Transfer Events</string>
+    <string name="transfer_button">Send Events</string>
     <string name="connect_to_partner_button">Connect to partner</string>
+    <string name="receive_events_button">Receive Events</string>
+    <string name="address1">38:D4:0B:3B:69:5F</string>
+    <string name="address2">10:30:47:DC:64:D0</string>
+    <string name="load_button">Load Downloaded Events</string>
 
     <!-- main screen strings-->
     <string name="todays_events_button">Things I have left to do today</string>
@@ -56,6 +60,9 @@
     <string name="no_events">You have no events. Click add to add some!</string>
     <string name="events_all_finished">You have finished all events! Well done!</string>
     <string name="back_button">back</string>
+
+    <!-- display all events strings-->
+    <string name="display_title">All stored events</string>
 
     <!-- event screen strings-->
     <string name="default_field_name">Event Name</string>

@@ -26,6 +26,9 @@ public final class TableData {
         public static final String TABLE_NAME = "events";
         public static boolean EDITING;
         public static boolean DISPLAY_ONLY;
+        public static String INCOMING_TABLE = "";
+        public static boolean READY_TO_LOAD = false;
+
 //        public static final String COLUMN_NAME_ENTRY_ID = "entryid";
 //        public static final String COLUMN_NAME_TITLE = "title";
 //        public static final String COLUMN_NAME_SUBTITLE = "subtitle";

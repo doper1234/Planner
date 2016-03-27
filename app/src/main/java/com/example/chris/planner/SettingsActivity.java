@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.util.Set;
+
 public class SettingsActivity extends Activity {
 
     @Override
@@ -33,6 +35,12 @@ public class SettingsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, ChangeFont.class));
+            }
+        });
+        findViewById(R.id.viewAllEventsButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, DisplayAllEvents.class));
             }
         });
         findViewById(R.id.transferDataOverBlueToothButton).setOnClickListener(new View.OnClickListener() {
