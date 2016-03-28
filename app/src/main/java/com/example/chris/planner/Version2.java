@@ -33,6 +33,7 @@ public class Version2 extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_version2);
         TableData.TableInfo.EDITING = false;
+        OnceADayReminder onceADayReminder = new OnceADayReminder(this);
         createStartScreen();
         setColours();
 
