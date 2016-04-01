@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,10 +22,16 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setSettingsScreen();
-        setColours();
+        //setColours();
     }
 
     public void setSettingsScreen(){
+        findViewById(R.id.changeColourThemeButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, ChangeColourStatic.class));
+            }
+        });
         Button changeColourbutton = (Button) findViewById(R.id.changeColourButton);
         changeColourbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,6 +39,7 @@ public class SettingsActivity extends Activity {
                 startActivity(new Intent(SettingsActivity.this, ChangeColour.class));
             }
         });
+        Drawable background = changeColourbutton.getBackground();
         Button changeFontButton = (Button) findViewById(R.id.changeFontButton);
         changeFontButton.setOnClickListener(new View.OnClickListener() {
             @Override

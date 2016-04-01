@@ -11,4 +11,16 @@
     <color name="background_colour">#FF0000</color>
     <color name="foreground_colour">#edf6ff</color>
     <color name="button_colour">#FF0000</color>
+
+    <!-- change colour theme colours-->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="light_blue">#000000</color>
+    <color name="light_green">#000000</color>
+    <color name="red">#ff0000</color>
+    <color name="yellow">#000000</color>
+    <color name="beige">#000000</color>
+    <color name="orange">#000000</color>
+    <color name="turquoise">#000000</color>
+
 </resources>

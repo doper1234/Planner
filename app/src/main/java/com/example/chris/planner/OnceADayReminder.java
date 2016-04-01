@@ -1,9 +1,11 @@
 package com.example.chris.planner;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.SystemClock;
 
@@ -19,6 +21,11 @@ public class OnceADayReminder {
     private PendingIntent alarmIntent;
 
     public OnceADayReminder(Context context){
+        new AlertDialog.Builder(context)
+                .setTitle("Delete everything?")
+                .setMessage("Are you sure you want to erase your phone?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, null);
         alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, OnceADayReminder.class);
         alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
@@ -36,14 +43,16 @@ public class OnceADayReminder {
 // With setInexactRepeating(), you have to use one of the AlarmManager interval
 // constants--in this case, AlarmManager.INTERVAL_DAY.
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, alarmIntent);
+                10000, alarmIntent);
+
+
     }
     public class SampleBootReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-                // Set the alarm here.
+                OnceADayReminder onceADayReminder = new OnceADayReminder(context);
             }
         }
     }

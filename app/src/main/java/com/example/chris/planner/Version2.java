@@ -1,16 +1,17 @@
 package com.example.chris.planner;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,8 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,14 +28,25 @@ import java.util.Calendar;
 public class Version2 extends Activity {
 
     String dayOfTheWeek, dateOfTheMonth;
+    private PendingIntent pendingIntent, pendingBootIntent;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_version2);
         TableData.TableInfo.EDITING = false;
-        OnceADayReminder onceADayReminder = new OnceADayReminder(this);
+        Intent alarmIntent = new Intent(Version2.this, UnfinishedEventsReminderReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(Version2.this, 0, alarmIntent, 0);
+
+        Intent bootIntent = new Intent(Version2.this, ResetFinishedEventsReceiver.class);
+        pendingBootIntent = PendingIntent.getBroadcast(Version2.this, 0, bootIntent, 0);
+
+        //startAlarmAtSpecificTime(12, 12, 1);
+        startAlarmManager();
+        startResetAlarmManager();
         createStartScreen();
-        setColours();
+        //setColours();
 
     }
 
@@ -129,7 +140,7 @@ public class Version2 extends Activity {
                     eventName = cr.getString(0);
                     eventFrequency = cr.getString(1);
                     eventDuration = Integer.parseInt(cr.getString(2));
-                    new Event(this, eventName, eventFrequency, eventDuration, ll);
+                    new Event(this, eventName, eventFrequency, eventDuration, null, null,ll);
                     allFinished = false;
                 }
 
@@ -185,5 +196,42 @@ public class Version2 extends Activity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
         notification.defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE;
+    }
+
+    public void startAlarmManager() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 1000*60*60*24;
+
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+    }
+
+    public void startResetAlarmManager(){
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 1000 * 60 *60 * 24;
+
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingBootIntent);
+        Toast.makeText(this, "Boot Alarm Set", Toast.LENGTH_SHORT).show();
+    }
+
+    public void cancelAlarmManager() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntent);
+        Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+    }
+
+    public void startAlarmAtSpecificTime(int hour, int minute, int repeatEveryXMinutes) {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 1000 * 60 * 20;
+
+        /* Set the alarm to start at time hour:minute */
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+
+        /* Repeating on every x minutes interval */
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                1000 * 60 * repeatEveryXMinutes, pendingIntent);
     }
 }

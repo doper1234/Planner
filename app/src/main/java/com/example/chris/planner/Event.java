@@ -21,7 +21,7 @@ import android.widget.Toast;
  */
 public class Event {
 
-    TextView titleView, durationView, frequencyView;
+    TextView titleView, durationView, initialDurationView, finishedView, frequencyView;
     Button edit, delete, finished, subtractTime;
     CheckBox done;
     Context ac;
@@ -34,7 +34,7 @@ public class Event {
     LinearLayout linearLayout;
     LinearLayout buttonsLayout;
     public Event(final Activity ma, final String title, final String frequency, final int duration,
-                 LinearLayout ll){
+                  LinearLayout ll){
         this.title = title;
         this.ma = ma;
 //        rl = (RelativeLayout)ma.findViewById(R.id.main);
@@ -113,6 +113,7 @@ public class Event {
             buttonsLayout.addView(finished);
         }
         this.duration = duration;
+
         if(duration > 0) {
 
             durationView = new TextView(ac);
@@ -143,6 +144,7 @@ public class Event {
         if(durationView != null){
             linearLayout.addView(durationView);
         }
+
         if(!TableData.TableInfo.DISPLAY_ONLY){
             linearLayout.addView(buttonsLayout);
         }
@@ -151,6 +153,30 @@ public class Event {
 
 
 
+
+    }
+    public Event(final Activity ma, final String title, final String frequency, final int duration,
+                 final String initialDuration, final String finishedState, LinearLayout ll){
+
+        this(ma, title, frequency, duration, ll);
+
+        if(finishedState != null){
+            finishedView = new TextView(ac);
+            finishedView.setText("Finished: " + finishedState);
+        }
+
+        if(initialDuration != null){
+            initialDurationView = new TextView(ac);
+            initialDurationView.setText("Initial time: " + initialDuration +
+                    "Time remaining: " + duration);
+        }
+
+        if(initialDurationView != null){
+            linearLayout.addView(initialDurationView);
+        }
+        if(finishedView != null){
+            linearLayout.addView(finishedView);
+        }
 
     }
 

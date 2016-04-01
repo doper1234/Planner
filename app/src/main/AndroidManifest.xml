@@ -2,23 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chris.planner" >
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <receiver android:name=".SampleBootReceiver"
-        android:enabled="false">
-        <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED"></action>
-        </intent-filter>
-    </receiver>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+        <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
         <activity android:name=".Version2" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +21,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".UnfinishedEventsReminderReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".ResetFinishedEventsReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".TestActivity" >
         </activity>
         <activity android:name=".MainActivity" >
@@ -52,6 +59,8 @@
         <activity android:name=".BluetoothActivity" >
         </activity>
         <activity android:name=".DisplayAllEvents" >
+        </activity>
+        <activity android:name=".ChangeColourStatic" >
         </activity>
     </application>
 

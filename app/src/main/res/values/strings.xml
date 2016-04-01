@@ -10,6 +10,7 @@
     <string name ="transfer_data_over_bluetooth">Transfer events over bluetooth</string>
     <string name="settings_button">Settings</string>
     <string name="database_button">View all scheduled events</string>
+    <string name="change_theme_button">Change Colour Themes</string>
 
     <!-- calendar screen strings-->
     <string name ="planned_on_this_day">For this day you have planned:</string>
@@ -23,6 +24,20 @@
     <string name="yesterday">Yesterday</string>
     <string name="today_history">Events you have finished today</string>
     <string name="yesterday_history">Unfinished events from yesterday</string>
+
+
+    <!-- colour themes strings-->
+    <string name="colour_theme_title">Colour Themes</string>
+    <string name="black">Black</string>
+    <string name="white">White</string>
+    <string name="light_blue">Light Blue</string>
+    <string name="light_green">Light Green</string>
+    <string name="red">Red</string>
+    <string name="yellow">Yellow</string>
+    <string name="beige">Beige</string>
+    <string name="orange">Orange</string>
+    <string name="turquoise">Turquoise</string>
+
 
     <!-- colour settings strings-->
     <string name="colour_title">Colour settings</string>

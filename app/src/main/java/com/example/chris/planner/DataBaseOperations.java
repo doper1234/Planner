@@ -65,8 +65,11 @@ public class DataBaseOperations extends SQLiteOpenHelper {
 
     }
 
-    public void createDayTable(String dayOfTheWeek, int dateOfTheMonth, String month, int year){
-        String TABLE_NAME = dayOfTheWeek + ", " + month + " " + dateOfTheMonth + ", " + year;
+    public void createDayTable(DataBaseOperations dbo, String dayOfTheWeek, int dateOfTheMonth, String month, int year){
+
+        //create a new database for "yesterday"
+        String TABLE_NAME = dayOfTheWeek + "_" + month + "_" + dateOfTheMonth + "_" + year;
+        //String TABLE_NAME = "tuesday_march_22_2016";//test date
         String CREATE_DATE_EVENT_INFO_QUERY = "CREATE TABLE " +
                 TABLE_NAME +" ( " +
                 TableInfo.EVENT_NAME +" TEXT, " +
@@ -77,11 +80,33 @@ public class DataBaseOperations extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_DATE_EVENT_INFO_QUERY);
 
+        //put all the information from each event from yesterday into the newly created database
+        Cursor yesterdayInformation = getInformation(dbo, dayOfTheWeek, Integer.toString(dateOfTheMonth));
+        if(yesterdayInformation.moveToFirst()){
+            do{
+                String eventName, eventFrequency, eventDuration, initialEventDuration, eventFinished;
+                eventName = yesterdayInformation.getString(0);
+                eventFrequency = yesterdayInformation.getString(1);
+                eventDuration = yesterdayInformation.getString(2);
+                initialEventDuration = yesterdayInformation.getString(3);
+                eventFinished = yesterdayInformation.getString(4);
+
+                SQLiteDatabase sqlDB = dbo.getWritableDatabase();
+                ContentValues cv = new ContentValues();
+                cv.put(TableInfo.EVENT_NAME, eventName);
+                cv.put(TableInfo.EVENT_FREQUENCY, eventFrequency);
+                cv.put(TableInfo.EVENT_DURATION, eventDuration);
+                cv.put(TableInfo.INITIAL_EVENT_DURATION, initialEventDuration);
+                cv.put(TableInfo.EVENT_FINISHED, eventFinished);
+                long k = sqlDB.insert(TABLE_NAME, null, cv);
+                Log.d("Database operations", "New previous day database created.");
+            }while (yesterdayInformation.moveToNext());
+        }
     }
 
     public Cursor getDayTableInformation(DataBaseOperations dbo, String dayOfTheWeek, int dateOfTheMonth, String month, int year){
         SQLiteDatabase sq = dbo.getWritableDatabase();
-        String TABLE_NAME = dayOfTheWeek + ", " + month + " " + dateOfTheMonth + ", " + year;
+        String TABLE_NAME = dayOfTheWeek + "_" + month + "_" + dateOfTheMonth + "_" + year;
         String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.EVENT_FINISHED};
         return sq.query(TABLE_NAME, columns, null, null, null, null, null);
     }
