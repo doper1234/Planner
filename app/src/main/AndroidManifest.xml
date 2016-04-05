@@ -62,6 +62,8 @@
         </activity>
         <activity android:name=".ChangeColourStatic" >
         </activity>
+        <activity android:name=".BluetoothNew" >
+        </activity>
     </application>
 
 </manifest>

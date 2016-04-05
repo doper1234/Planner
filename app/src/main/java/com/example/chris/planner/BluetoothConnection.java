@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,7 +30,7 @@ import java.util.UUID;
 public class BluetoothConnection {
 
 
-    Activity activity;
+    BluetoothActivity activity;
     private BluetoothAdapter BA;
     private BluetoothDevice deviceToConnectTo;
     private Set<BluetoothDevice>pairedDevices;
@@ -36,7 +38,7 @@ public class BluetoothConnection {
     private String lookingForAddress = "";
     private UUID uuidToUse;
     private BluetoothServer bluetoothServer;
-    public BluetoothConnection(Activity a, LinearLayout ll){
+    public BluetoothConnection(BluetoothActivity a, LinearLayout ll){
         activity = a;
         BA = BluetoothAdapter.getDefaultAdapter();
         TextView bluetoothDevice = new TextView(activity);
@@ -46,6 +48,13 @@ public class BluetoothConnection {
             Intent turnOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             activity.startActivityForResult(turnOn, 0);
             Toast.makeText(activity.getApplicationContext(), "Bluetooth turned on", Toast.LENGTH_LONG).show();
+            if (BA.getScanMode() !=
+                    BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                Log.d("Blue", "changing scan mode");
+                Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+                a.startActivity(discoverableIntent);
+            }
         } else{
             Toast.makeText(activity.getApplicationContext(),"Bluetooth already on", Toast.LENGTH_LONG).show();
         }
@@ -56,12 +65,12 @@ public class BluetoothConnection {
         this.lookingForAddress = lookingForAddress;
         ll = layout;
         deviceToConnectTo = BA.getRemoteDevice(lookingForAddress);
-        if(deviceToConnectTo.getName() !=null){
+        //if(deviceToConnectTo.getName() !=null){
             TextView bluetoothDeviceView = new TextView(activity);
             bluetoothDeviceView.setText(deviceToConnectTo.getName() + " with address of " + deviceToConnectTo.getAddress() + " found already paired. Click transfer to transfer data!");
             layout.addView(bluetoothDeviceView);
 
-        }else{
+        //}else{
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             activity.registerReceiver(mReceiver, filter);
 
@@ -73,7 +82,7 @@ public class BluetoothConnection {
             filter = new IntentFilter( BluetoothAdapter.ACTION_DISCOVERY_STARTED );
             activity.registerReceiver( mReceiver, filter );
 
-        }
+        //}
 
 //
 //// Get the local Bluetooth adapter
@@ -98,6 +107,11 @@ public class BluetoothConnection {
         for(BluetoothDevice bt : pairedDevices){
             TextView bluetoothDevice = new TextView(activity);
             bluetoothDevice.setText(bt.getName() + " address: " + bt.getAddress());
+            List<String> uuids = new ArrayList<>();
+            for(ParcelUuid uuid : bt.getUuids()){
+                uuids.add(uuid.toString());
+            }
+            activity.initializeExpandableListView(bt.getName(), bt.getAddress(), "Paired", uuids);
             layout.addView(bluetoothDevice);
             Log.d(bt.getName(), bt.getAddress());
         }
@@ -117,10 +131,13 @@ public class BluetoothConnection {
     }
 
     public void connectToDevice(String bluetoothAddress){
-  //      BluetoothDevice bd = BA.getRemoteDevice(bluetoothAddress);
-//        Log.d("get uuids", bd.getUuids().toString());
-
-
+        this.lookingForAddress = bluetoothAddress;
+        deviceToConnectTo = BA.getRemoteDevice(lookingForAddress);
+        if(deviceToConnectTo != null){
+            Toast.makeText(activity, "Connected to " + deviceToConnectTo.getName(), Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(activity, "Error connecting to device", Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -197,6 +214,22 @@ public class BluetoothConnection {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 //do something
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                List<String> uuids = new ArrayList<>();
+                String pairedStatus;
+                if(device.getBondState() == BluetoothDevice.BOND_BONDED){
+                    pairedStatus = "paired";
+                }else{
+                    pairedStatus = "not paired";
+                }
+                if(device.getUuids() != null){
+                    for(ParcelUuid uuid : device.getUuids()){
+                        uuids.add(uuid.toString());
+                    }
+                }else{
+                    uuids.add("no valid uuids");
+                }
+
+                activity.initializeExpandableListView(device.getName(), device.getAddress(), pairedStatus, uuids);
                 TextView t1 = new TextView(activity);
                 TextView t2 = new TextView(activity);
                 if(device.getAddress().equalsIgnoreCase(lookingForAddress)){

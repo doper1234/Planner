@@ -66,7 +66,8 @@
     <string name="receive_events_button">Receive Events</string>
     <string name="address1">38:D4:0B:3B:69:5F</string>
     <string name="address2">10:30:47:DC:64:D0</string>
-    <string name="load_button">Load Downloaded Events</string>
+    <string name="load_button">Load Events</string>
+    <string name="events_found">Events found on selected device</string>
 
     <!-- main screen strings-->
     <string name="todays_events_button">Things I have left to do today</string>
