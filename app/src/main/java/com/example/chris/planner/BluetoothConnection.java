@@ -103,18 +103,18 @@ public class BluetoothConnection {
 //        {
 //            Toast.makeText(activity.getApplicationContext(),"Bluetooth already on", Toast.LENGTH_LONG).show();
 //        }
-        pairedDevices = BA.getBondedDevices();
-        for(BluetoothDevice bt : pairedDevices){
-            TextView bluetoothDevice = new TextView(activity);
-            bluetoothDevice.setText(bt.getName() + " address: " + bt.getAddress());
-            List<String> uuids = new ArrayList<>();
-            for(ParcelUuid uuid : bt.getUuids()){
-                uuids.add(uuid.toString());
-            }
-            activity.initializeExpandableListView(bt.getName(), bt.getAddress(), "Paired", uuids);
-            layout.addView(bluetoothDevice);
-            Log.d(bt.getName(), bt.getAddress());
-        }
+//        pairedDevices = BA.getBondedDevices();
+//        for(BluetoothDevice bt : pairedDevices){
+//            TextView bluetoothDevice = new TextView(activity);
+//            bluetoothDevice.setText(bt.getName() + " address: " + bt.getAddress());
+//            List<String> uuids = new ArrayList<>();
+//            for(ParcelUuid uuid : bt.getUuids()){
+//                uuids.add(uuid.toString());
+//            }
+//            activity.initializeExpandableListView(bt.getName(), bt.getAddress(), "Paired", uuids);
+//            layout.addView(bluetoothDevice);
+//            Log.d(bt.getName(), bt.getAddress());
+//        }
 
         BA.startDiscovery();
     }

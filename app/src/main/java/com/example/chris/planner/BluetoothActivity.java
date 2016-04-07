@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -174,23 +175,22 @@ public class BluetoothActivity extends Activity {
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                LinearLayout ll = (LinearLayout)findViewById(R.id.displayEventsLayout);
-                TextView eventsFoundView = (TextView) findViewById(R.id.eventsFoundView);
-                eventsFoundView.setVisibility(View.VISIBLE);
-                TextView t = new TextView(BluetoothActivity.this);
+                //LinearLayout ll = (LinearLayout)findViewById(R.id.displayEventsLayout);
+                //TextView t = new TextView(BluetoothActivity.this);
                 if(childPosition == 0){
-                    t.setText("Paired");
+                    //t.setText("Paired");
                 }else if(childPosition == 1){
-                    t.setText("Send Events");
+                    //t.setText("Send Events");
                     bc.sendEvents();
+                    getAndSendDatabase();
                 }else if(childPosition == 2){
-                    t.setText("Receive Events");
+                  //  t.setText("Receive Events");
                     bc.receiveConnection(deviceAddress.get(groupPosition));
                 }else{
                     bc.connectToDevice(deviceAddress.get(groupPosition));
-                    t.setText("Connect to this device");
+                //    t.setText("Connect to this device");
                 }
-                ll.addView(t);
+                //ll.addView(t);
 
                 return true;
             }
@@ -232,7 +232,7 @@ public class BluetoothActivity extends Activity {
     }
 
     private void updateDatabase(){
-        LinearLayout ll = (LinearLayout) findViewById(R.id.bluetoothSearchLayout);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.displayEventsLayout);
         if(TableData.TableInfo.READY_TO_LOAD){
             TableData.TableInfo.READY_TO_LOAD = false;
             String newTable = TableData.TableInfo.INCOMING_TABLE;
@@ -240,18 +240,27 @@ public class BluetoothActivity extends Activity {
 //            TextView t = new TextView(this);
 //            t.setText(newTable);
 //            ll.addView(t);
+            TextView eventsFoundView = (TextView) findViewById(R.id.eventsFoundView);
+            eventsFoundView.setVisibility(View.VISIBLE);
             TableData.TableInfo.INCOMING_TABLE = "";
             String[] events = newTable.split(divider);
             DataBaseOperations dbo = new DataBaseOperations(this);
             for (int i = 0; i < events.length; i++) {
                 String[] eventInfo = events[i].split("/");
-                TextView t1 = new TextView(this);
                 //t1.setText("Events saved!");
                   if(i != 0){
+                      LinearLayout linearLayout = new LinearLayout(this);
+                      linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                      TextView t1 = new TextView(this);
+                      CheckBox checkBox = new CheckBox(this);
+                      checkBox.setChecked(true);
                     t1.setText("New event: " + eventInfo[1] + " Frequency: " + eventInfo[2] + " Duration: " + eventInfo[4]);
                     dbo.putInformation(this, dbo, eventInfo[1], eventInfo[2], Integer.parseInt(eventInfo[4]));
+                      linearLayout.addView(t1);
+                      linearLayout.addView(checkBox);
+                      ll.addView(linearLayout);
                 }
-                ll.addView(t1);
+
             }
         }else{
             TextView t = new TextView(this);

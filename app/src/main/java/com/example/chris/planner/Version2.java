@@ -2,10 +2,12 @@ package com.example.chris.planner;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -13,22 +15,32 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import junit.runner.Version;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 public class Version2 extends Activity {
 
     String dayOfTheWeek, dateOfTheMonth;
     private PendingIntent pendingIntent, pendingBootIntent;
+    List<String> eventNames, eventFrequencies, eventDurations;
+    HashMap<String, List<String>> childList;
+    ExpandableListView expandableListView;
 
 
     @Override
@@ -56,7 +68,8 @@ public class Version2 extends Activity {
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reset();
+                //reset();
+                setExpandableListEvents();
             }
         });
         calendarButton = (Button)findViewById(R.id.calendarButtonMain);
@@ -128,8 +141,13 @@ public class Version2 extends Activity {
         TextView noEvents = (TextView) findViewById(R.id.noEventsTextView);
         Cursor cr = dbo.getInformation(dbo, dayOfTheWeek, dateOfTheMonth);
         LinearLayout ll = (LinearLayout) findViewById(R.id.mainLinearLayout);
+        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView2);
         ll.removeAllViews();
         boolean allFinished = true;
+        childList = new HashMap<>();
+        eventNames = new ArrayList<>();
+        eventFrequencies = new ArrayList<>();
+        eventDurations = new ArrayList<>();
         if(cr.moveToFirst()){
             do{
                 String eventName, eventFrequency, eventFinished;
@@ -140,11 +158,16 @@ public class Version2 extends Activity {
                     eventName = cr.getString(0);
                     eventFrequency = cr.getString(1);
                     eventDuration = Integer.parseInt(cr.getString(2));
-                    new Event(this, eventName, eventFrequency, eventDuration, null, null,ll);
+                    //new Event(this, eventName, eventFrequency, eventDuration, null, null,ll);
+                    setExpandableListEvents(eventName, eventFrequency, Integer.toString(eventDuration));
+//                    eventNames.add(eventName);
+//                    eventFrequencies.add(eventFrequency);
+//                    eventDurations.add(Integer.toString(eventDuration));
                     allFinished = false;
                 }
 
             }while(cr.moveToNext());
+
             if(allFinished){
                 noEvents.setVisibility(View.VISIBLE);
                 noEvents.setText("You have finished all events! Well done!");
@@ -156,6 +179,101 @@ public class Version2 extends Activity {
             noEvents.setVisibility(View.VISIBLE);
             noEvents.setText("You have no events. Click add to add some!");
         }
+    }
+
+    private void setExpandableListEvents(String eventName, String eventFrequency, String eventDuration){
+//
+//        HashMap<String, List<String>> childList = new HashMap<>();
+//        for (int i = 0; i < eventNames.size(); i ++){
+//            List<String> deviceInfo = new ArrayList<>();
+//            deviceInfo.add(eventFrequency.get(i));
+//            deviceInfo.add(eventDuration.get(i));
+//            deviceInfo.add("Edit");
+//            deviceInfo.add("Finished");
+//            deviceInfo.add("Subtract Time");
+//            childList.put(eventNames.get(i), deviceInfo);
+//            Log.d("New Event", eventNames.get(i));
+//        }
+//        ExpandableListView expandableListView = new ExpandableListView(this);
+//        BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this, eventNames, childList);
+//        Log.d(eventNames.toString(), childList.toString());
+//        expandableListView.setAdapter(adapter);
+//        ll.addView(expandableListView);
+
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                if(parent.getExpandableListAdapter().getChild(groupPosition, childPosition).equals("Finished")){
+//                    DataBaseOperations dbo = new DataBaseOperations(Version2.this);
+//                    dbo.updateEventFinished(dbo, (String)parent.getExpandableListAdapter().getGroup(groupPosition));
+//                    setupTodaysEvents();
+                    finishedAnEvent((String)parent.getExpandableListAdapter().getGroup(groupPosition));
+                }
+//                Toast.makeText(Version2.this, "You clicked " + parent.getExpandableListAdapter().getChild(groupPosition, childPosition) +
+//                                                " on event " + parent.getExpandableListAdapter().getGroup(groupPosition), Toast.LENGTH_LONG).show(); ;
+                return true;
+            }
+        });
+        eventNames.add(eventName);
+        eventFrequencies.add(eventFrequency);
+        eventDurations.add(eventDuration);
+        for (int i = 0; i < eventNames.size(); i ++){
+            List<String> deviceInfo = new ArrayList<>();
+            deviceInfo.add(eventFrequencies.get(i));
+            if(Integer.parseInt(eventDurations.get(i)) > 0){
+                deviceInfo.add("Time remaining: " + eventDurations.get(i));
+            }
+            deviceInfo.add("Edit");
+            deviceInfo.add("Finished");
+            deviceInfo.add("Subtract Time");
+            deviceInfo.add("Move Event To Tomorrow(Once)");
+            deviceInfo.add("Move Event To Tomorrow(Indefinitely)");
+            childList.put(eventNames.get(i), deviceInfo);
+        }
+        BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this, this.eventNames, childList);
+        expandableListView.setAdapter(adapter);
+    }
+
+    private void finishedAnEvent(final String title){
+            new AlertDialog.Builder(this)
+                    .setTitle("Event Finished")
+                    .setMessage("Are you sure you've finished "+ title+"?")
+                    .setIcon(R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            DataBaseOperations dbo = new DataBaseOperations(Version2.this);
+                            dbo.updateEventFinished(dbo, title);
+                            setupTodaysEvents();
+                            Toast.makeText(Version2.this, "You have finished an event!", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    private void setExpandableListEvents(){
+        ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.expandableListView2);
+     //   ExpandableListView expandableListView = new ExpandableListView(this);
+//        ScrollView ll = (ScrollView) findViewById(R.id.mainScrollView);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.mainLinearLayout);
+        ll.addView(expandableListView);
+        HashMap<String, List<String>> childList = new HashMap<>();
+        List<String> eventNames = new ArrayList<>();
+        eventNames.add("Test Event One");
+        eventNames.add("Event Test Two");
+
+        for (int i = 0; i < eventNames.size(); i ++){
+            List<String> deviceInfo = new ArrayList<>();
+            deviceInfo.add("wednesday thursday");
+            deviceInfo.add("time remaining: 45 minutes");
+            deviceInfo.add("Edit");
+            deviceInfo.add("Finished");
+            deviceInfo.add("Subtract Time");
+            childList.put(eventNames.get(i), deviceInfo);
+        }
+        BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this, eventNames, childList);
+        expandableListView.setAdapter(adapter);
     }
 
 
@@ -199,19 +317,39 @@ public class Version2 extends Activity {
     }
 
     public void startAlarmManager() {
+        Calendar calendar = Calendar.getInstance();
+        Calendar alarmCalender = calendar;
+        alarmCalender.set(Calendar.HOUR_OF_DAY, 19);
+        alarmCalender.set(Calendar.MINUTE, 30);
+        alarmCalender.set(Calendar.SECOND,0);
+
+//        long time24h = 24*60*60*1000;
+//        long timeAt09_00 = ...; // calculate from now...
+//        long timeAt11_30 = ...; // calculate from now...
+//
+//        alarmMgr1.setInexactRepeating(AlarmManager.RTC_WAKEUP, now ,        time24h, alarmIntent);
+//        alarmMgr2.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeAt09_00, time24h, alarmIntent);
+//        alarmMgr3.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeAt11_30, time24h, alarmIntent);
+
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         int interval = 1000*60*60*24;
 
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, alarmCalender.getTimeInMillis(), interval, pendingIntent);
+        //Toast.makeText(this, "Alarm Set for 13:30", Toast.LENGTH_SHORT).show();
     }
 
     public void startResetAlarmManager(){
+        Calendar calendar = Calendar.getInstance();
+        Calendar alarmCalender = calendar;
+        alarmCalender.set(Calendar.HOUR_OF_DAY, 23);
+        alarmCalender.set(Calendar.MINUTE, 59);
+        alarmCalender.set(Calendar.SECOND,0);
+
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         int interval = 1000 * 60 *60 * 24;
 
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingBootIntent);
-        Toast.makeText(this, "Boot Alarm Set", Toast.LENGTH_SHORT).show();
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, alarmCalender.getTimeInMillis(), interval, pendingBootIntent);
+        //Toast.makeText(this, "Boot Alarm Set", Toast.LENGTH_SHORT).show();
     }
 
     public void cancelAlarmManager() {

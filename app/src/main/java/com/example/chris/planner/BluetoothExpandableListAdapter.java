@@ -2,6 +2,7 @@ package com.example.chris.planner;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,7 @@ public class BluetoothExpandableListAdapter extends BaseExpandableListAdapter {
             LayoutInflater layoutInflater = (LayoutInflater) this.ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.bluetooth_parent_layout, null);
         }
+        Log.d("parentview", title);
         TextView textView = (TextView) convertView.findViewById(R.id.parentItem);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setText(title);
@@ -84,8 +86,9 @@ public class BluetoothExpandableListAdapter extends BaseExpandableListAdapter {
             LayoutInflater layoutInflater = (LayoutInflater) this.ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.bluetooth_child_layout, null);
         }
+        Log.d("childview", title);
         TextView textView = (TextView) convertView.findViewById(R.id.childItem);
-        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTypeface(null, Typeface.NORMAL);
         textView.setText(title);
 
         return convertView;
@@ -93,6 +96,12 @@ public class BluetoothExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
+        if(getChildrenCount(groupPosition) > 6){
+            return childPosition != 1 || childPosition != 0;
+        }else if(getChildrenCount(groupPosition) == 6){
+            return childPosition != 0;
+        }else{
+            return true;
+        }
     }
 }

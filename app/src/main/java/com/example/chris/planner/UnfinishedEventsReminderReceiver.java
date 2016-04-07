@@ -40,8 +40,8 @@ public class UnfinishedEventsReminderReceiver extends BroadcastReceiver {
         Notification notification = new NotificationCompat.Builder(context)
                 .setTicker(r.getString(R.string.notification_title))
                 .setSmallIcon(android.R.drawable.ic_menu_report_image)
-                .setContentTitle(r.getString(R.string.notification_title))
-                .setContentText(r.getString(R.string.notification_text))
+                .setContentTitle("I love you")
+                .setContentText("I love you")
                 //.setContentIntent(pi) ?
                 .setSound(alarmSound)
                 .setAutoCancel(true)
