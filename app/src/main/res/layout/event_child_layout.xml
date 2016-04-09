@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="@dimen/event_child_height"
+        android:layout_height="@dimen/event_child_height"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:src="@drawable/pixel_test_icon"
+        android:id="@+id/childIconImageView" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:paddingLeft="20dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Sample Event Child"
+        android:id="@+id/childTextView"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>

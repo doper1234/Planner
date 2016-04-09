@@ -19,12 +19,15 @@ public class BluetoothExpandableListAdapter extends BaseExpandableListAdapter {
     private List<String> headerTitles;
     private HashMap<String, List<String>> childTitles;
     private Context ctx;
+    Typeface font;
 
     BluetoothExpandableListAdapter(Context ctx, List<String> headerTitles,  HashMap<String, List<String>> childTitles){
 
         this.ctx = ctx;
         this.childTitles = childTitles;
         this.headerTitles = headerTitles;
+        font = Typeface.createFromAsset(ctx.getAssets(), "ComicSansMS.ttf");
+
     }
 
     @Override
@@ -69,12 +72,15 @@ public class BluetoothExpandableListAdapter extends BaseExpandableListAdapter {
         String title = (String)this.getGroup(groupPosition);
         if(convertView == null){
             LayoutInflater layoutInflater = (LayoutInflater) this.ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.bluetooth_parent_layout, null);
+            convertView = layoutInflater.inflate(R.layout.event_parent_layout, null);
         }
         Log.d("parentview", title);
-        TextView textView = (TextView) convertView.findViewById(R.id.parentItem);
-        textView.setTypeface(null, Typeface.BOLD);
+        TextView textView = (TextView) convertView.findViewById(R.id.eventTextView);
+        textView.setTypeface(font, Typeface.BOLD);
         textView.setText(title);
+        TextView timeTextView = (TextView) convertView.findViewById(R.id.timeLeftTextView);
+        timeTextView.setTypeface(font, Typeface.BOLD);
+        //timeTextView.setText(title);
 
         return convertView;
     }

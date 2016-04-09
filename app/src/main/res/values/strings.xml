@@ -11,6 +11,7 @@
     <string name="settings_button">Settings</string>
     <string name="database_button">View all scheduled events</string>
     <string name="change_theme_button">Change Colour Themes</string>
+    <string name="alarm_button">Alarm settings</string>
 
     <!-- calendar screen strings-->
     <string name ="planned_on_this_day">For this day you have planned:</string>
@@ -72,7 +73,7 @@
     <!-- main screen strings-->
     <string name="todays_events_button">Things I have left to do today</string>
     <string name="current_date">January 5th, 2016</string>
-    <string name="add_button">+add</string>
+    <string name="add_button">new</string>
     <string name="no_events">You have no events. Click add to add some!</string>
     <string name="events_all_finished">You have finished all events! Well done!</string>
     <string name="back_button">back</string>

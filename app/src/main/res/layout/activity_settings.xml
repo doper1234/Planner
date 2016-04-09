@@ -13,16 +13,9 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/settings_button"
-        android:id="@+id/textView5"
+        android:id="@+id/settingsTitleTextView"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
-
-    <AnalogClock
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/analogClock"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/settingsBackButton" />
 
     <Button
         android:layout_width="wrap_content"
@@ -37,9 +30,11 @@
         android:layout_height="wrap_content"
         android:text="@string/change_colour"
         android:id="@+id/changeColourButton"
-        android:layout_below="@+id/textView5"
-        android:layout_alignStart="@+id/transferDataOverBlueToothButton"
-        android:layout_alignEnd="@+id/transferDataOverBlueToothButton" />
+        android:layout_below="@+id/settingsTitleTextView"
+        android:layout_alignEnd="@+id/settingsBackButton"
+        android:textAlignment="viewStart"
+        android:layout_toEndOf="@+id/settingsTitleTextView"
+        android:visibility="invisible" />
 
     <Button
         android:layout_width="wrap_content"
@@ -48,7 +43,9 @@
         android:id="@+id/changeFontButton"
         android:layout_below="@+id/changeColourButton"
         android:layout_alignStart="@+id/changeColourButton"
-        android:layout_alignEnd="@+id/changeColourButton" />
+        android:layout_alignEnd="@+id/changeColourButton"
+        android:textAlignment="viewStart"
+        android:visibility="invisible" />
 
     <Button
         android:layout_width="wrap_content"
@@ -58,8 +55,11 @@
         android:focusableInTouchMode="false"
         android:focusable="false"
         android:background="@color/warning_colour"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:textAlignment="viewStart"
+        android:layout_below="@+id/setAlarmButton"
+        android:layout_alignEnd="@+id/setAlarmButton"
+        android:layout_alignStart="@+id/setAlarmButton"
+        android:visibility="invisible" />
 
     <Button
         android:layout_width="wrap_content"
@@ -67,8 +67,10 @@
         android:text="@string/view_all_events"
         android:id="@+id/viewAllEventsButton"
         android:layout_below="@+id/changeFontButton"
-        android:layout_alignStart="@+id/transferDataOverBlueToothButton"
-        android:layout_alignEnd="@+id/transferDataOverBlueToothButton" />
+        android:layout_alignEnd="@+id/changeFontButton"
+        android:textAlignment="viewStart"
+        android:layout_alignStart="@+id/changeFontButton"
+        android:visibility="invisible" />
 
     <Button
         android:layout_width="wrap_content"
@@ -76,15 +78,117 @@
         android:text="@string/transfer_data_over_bluetooth"
         android:id="@+id/transferDataOverBlueToothButton"
         android:layout_below="@+id/viewAllEventsButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignEnd="@+id/viewAllEventsButton"
+        android:textAlignment="viewStart"
+        android:layout_toEndOf="@+id/viewAllEventsIconImageView"
+        android:visibility="invisible" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/change_theme_button"
         android:id="@+id/changeColourThemeButton"
-        android:layout_centerVertical="true"
+        android:textAlignment="viewStart"
+        android:layout_below="@+id/transferDataOverBlueToothButton"
         android:layout_alignEnd="@+id/transferDataOverBlueToothButton"
-        android:layout_alignStart="@+id/transferDataOverBlueToothButton" />
+        android:layout_alignStart="@+id/transferDataOverBlueToothButton"
+        android:visibility="invisible" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/alarm_button"
+        android:id="@+id/setAlarmButton"
+        android:textAlignment="viewStart"
+        android:layout_below="@+id/changeColourThemeButton"
+        android:layout_alignEnd="@+id/changeColourThemeButton"
+        android:layout_alignStart="@+id/changeColourThemeButton"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/colour_test_icon"
+        android:id="@+id/coloursIconImageView"
+        android:layout_alignTop="@+id/changeColourButton"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/changeColourButton"
+        android:layout_alignBottom="@+id/changeColourButton"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fontIconImageView"
+        android:src="@drawable/font_test_icon"
+        android:layout_alignTop="@+id/changeFontButton"
+        android:layout_toStartOf="@+id/changeFontButton"
+        android:layout_alignBottom="@+id/changeFontButton"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewAllEventsIconImageView"
+        android:src="@drawable/view_all_test_icon"
+        android:layout_alignTop="@+id/viewAllEventsButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/viewAllEventsButton"
+        android:layout_toStartOf="@+id/viewAllEventsButton"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bluetoothIconImageView"
+        android:src="@drawable/bluetooth_test_icon"
+        android:layout_alignTop="@+id/transferDataOverBlueToothButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/transferDataOverBlueToothButton"
+        android:layout_toStartOf="@+id/transferDataOverBlueToothButton"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/alarms_test_icon"
+        android:id="@+id/alarmIconImageView"
+        android:layout_alignTop="@+id/setAlarmButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/setAlarmButton"
+        android:layout_toStartOf="@+id/setAlarmButton"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/delete_all_test_icon"
+        android:id="@+id/deleteIconImageView"
+        android:layout_alignTop="@+id/deleteAllButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/deleteAllButton"
+        android:layout_toStartOf="@+id/deleteAllButton"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/colour_test_icon"
+        android:id="@+id/changeColourThemeIconImageView"
+        android:layout_alignTop="@+id/changeColourThemeButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/changeColourThemeButton"
+        android:layout_toStartOf="@+id/changeColourThemeButton"
+        android:visibility="invisible" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:id="@+id/settingsOptionsListView"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/settingsTitleTextView"
+        android:layout_alignBottom="@+id/settingsBackButton" />
 
 </RelativeLayout>

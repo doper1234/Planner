@@ -6,22 +6,32 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.DataSetObserver;
+import android.graphics.Typeface;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,10 +64,16 @@ public class Version2 extends Activity {
         Intent bootIntent = new Intent(Version2.this, ResetFinishedEventsReceiver.class);
         pendingBootIntent = PendingIntent.getBroadcast(Version2.this, 0, bootIntent, 0);
 
+        TextView text = (TextView) findViewById(R.id.textView2);
+        Typeface font = Typeface.createFromAsset(getAssets(), "ComicSansMS.ttf");
+        text.setTypeface(font);
         //startAlarmAtSpecificTime(12, 12, 1);
         startAlarmManager();
         startResetAlarmManager();
         createStartScreen();
+        //setTabHost();
+        //setTabHost();
+        //showBradley();
         //setColours();
 
     }
@@ -148,6 +164,9 @@ public class Version2 extends Activity {
         eventNames = new ArrayList<>();
         eventFrequencies = new ArrayList<>();
         eventDurations = new ArrayList<>();
+//        eventNames.add("+");
+//        eventFrequencies.add("");
+//        eventDurations.add("");
         if(cr.moveToFirst()){
             do{
                 String eventName, eventFrequency, eventFinished;
@@ -200,6 +219,16 @@ public class Version2 extends Activity {
 //        expandableListView.setAdapter(adapter);
 //        ll.addView(expandableListView);
 
+
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                if(groupPosition == 0){
+                    startActivity(new Intent(Version2.this, NewEventScreen.class));
+                }
+                return true;
+            }
+        });
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -220,19 +249,70 @@ public class Version2 extends Activity {
         eventDurations.add(eventDuration);
         for (int i = 0; i < eventNames.size(); i ++){
             List<String> deviceInfo = new ArrayList<>();
-            deviceInfo.add(eventFrequencies.get(i));
-            if(Integer.parseInt(eventDurations.get(i)) > 0){
-                deviceInfo.add("Time remaining: " + eventDurations.get(i));
-            }
-            deviceInfo.add("Edit");
-            deviceInfo.add("Finished");
-            deviceInfo.add("Subtract Time");
-            deviceInfo.add("Move Event To Tomorrow(Once)");
-            deviceInfo.add("Move Event To Tomorrow(Indefinitely)");
+            //if(i != 0){
+                deviceInfo.add(eventFrequencies.get(i));
+                if(Integer.parseInt(eventDurations.get(i)) > 0){
+                    deviceInfo.add("Time remaining: " + eventDurations.get(i));
+                }
+                deviceInfo.add("Edit");
+                deviceInfo.add("Finished");
+                deviceInfo.add("Subtract Time");
+                deviceInfo.add("Move Event To Tomorrow(Once)");
+                deviceInfo.add("Move Event To Tomorrow(Indefinitely)");
+            //}
+
             childList.put(eventNames.get(i), deviceInfo);
         }
         BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this, this.eventNames, childList);
+        //ArrayAdapter(Context context, int resource, int textViewResourceId, T[] objects);
+
         expandableListView.setAdapter(adapter);
+    }
+
+    private void setTabHost(){
+//        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+//        tabHost.setup();
+//        TabSpec homeTab = tabHost.newTabSpec("First Tab");
+//        TabSpec calendarTab = tabHost.newTabSpec("Second Tab");
+//        TabSpec historyTab = tabHost.newTabSpec("Third Tab");
+//
+////        tabHost.clearAllTabs();
+//        homeTab.setIndicator("", getResources().getDrawable(R.drawable.home_icon));
+//        homeTab.setContent(new Intent(this, Version2.class));
+//
+//        calendarTab.setIndicator("", getResources().getDrawable(R.drawable.calendar_icon));
+//        calendarTab.setContent(new Intent(this, CalendarActivity.class));
+//
+//        historyTab.setIndicator("", getResources().getDrawable(R.drawable.history_icon));
+//        historyTab.setContent(new Intent(this, PreviousHistory.class));
+//
+////        ((TabHost) findViewById(R.id.tabHost)).addTab(homeTab);
+////        ((TabHost) findViewById(R.id.tabHost)).addTab(calendarTab);
+////        ((TabHost) findViewById(R.id.tabHost)).addTab(historyTab);
+//        tabHost.addTab(homeTab);
+//        tabHost.addTab(calendarTab);
+//        tabHost.addTab(historyTab);
+//        TabHost host = (TabHost)findViewById(R.id.tabHost);
+//        host.setup();
+//
+//        //Tab 1
+//        TabHost.TabSpec spec = host.newTabSpec("Tab One");
+//        spec.setContent(new Intent(this, PreviousHistory.class));
+//        spec.setIndicator("Tab One");
+////        host.addTab(spec);
+//
+//        //Tab 2
+//        spec = host.newTabSpec("Tab Two");
+//        spec.setContent(new Intent(this, PreviousHistory.class));
+//        spec.setIndicator("Tab Two");
+//  //      host.addTab(spec);
+//
+//        //Tab 3
+//        spec = host.newTabSpec("Tab Three");
+//        spec.setContent(new Intent(this, PreviousHistory.class));
+//        spec.setIndicator("Tab Three");
+    //    host.addTab(spec);
+
     }
 
     private void finishedAnEvent(final String title){
@@ -275,7 +355,6 @@ public class Version2 extends Activity {
         BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this, eventNames, childList);
         expandableListView.setAdapter(adapter);
     }
-
 
     private void resetEventsDuration(DataBaseOperations dbo){
         Cursor cr = dbo.getInformation(dbo);
@@ -371,5 +450,41 @@ public class Version2 extends Activity {
         /* Repeating on every x minutes interval */
         manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 1000 * 60 * repeatEveryXMinutes, pendingIntent);
+    }
+
+    private void showBradley(){
+        new AlertDialog.Builder(this)
+                .setTitle("Hi Bradley")
+                .setMessage("Are you sure you want to erase all data on your phone?")
+                .setIcon(R.drawable.ic_dialog_alert)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Toast.makeText(Version2.this, "Did you like my joke?", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        new AlertDialog.Builder(Version2.this)
+                                .setTitle("You suck")
+                                .setMessage("You're not getting away that easily. Click yes.")
+                                .setIcon(R.drawable.ic_dialog_alert)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        Toast.makeText(Version2.this, "Did you like my joke?", Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        Toast.makeText(Version2.this, "Did you like my joke?", Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .show();
+                    }
+                })
+                .show();
     }
 }
