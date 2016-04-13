@@ -227,7 +227,7 @@ public class BluetoothActivity extends Activity {
             deviceInfo.add("Connect to this device");
             childList.put(deviceName.get(i), deviceInfo);
         }
-        BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this, deviceName, childList);
+        BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this,this, deviceName, childList, null);
         expandableListView.setAdapter(adapter);
     }
 

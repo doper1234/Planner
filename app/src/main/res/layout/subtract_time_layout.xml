@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/subtractRootElement"
+    android:backgroundTint="@color/scrollingBackground">
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:id="@+id/subtractSeekBar"
+        android:max="120"
+        android:mirrorForRtl="false"
+        android:nestedScrollingEnabled="false"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0 minutes"
+        android:id="@+id/timeToSubtractTextView"
+        android:textAlignment="center"
+        android:layout_below="@+id/subtractSeekBar"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="ok"
+        android:padding="5dp"
+        android:id="@+id/subtractOkButton"
+        android:singleLine="false"
+        android:layout_below="@+id/timeToSubtractTextView"
+        android:layout_alignParentEnd="true"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/pixel_test_icon" />
+
+    <Button
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:text="cancel"
+        android:padding="5dp"
+        android:id="@+id/subtractCancelButton"
+        android:layout_below="@+id/timeToSubtractTextView"
+        android:layout_toStartOf="@+id/subtractOkButton"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/pixel_test_icon" />
+
+</RelativeLayout>

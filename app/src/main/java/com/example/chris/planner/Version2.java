@@ -14,8 +14,10 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -71,7 +73,7 @@ public class Version2 extends Activity {
         startAlarmManager();
         startResetAlarmManager();
         createStartScreen();
-        //setTabHost();
+        setTabHost();
         //setTabHost();
         //showBradley();
         //setColours();
@@ -263,7 +265,7 @@ public class Version2 extends Activity {
 
             childList.put(eventNames.get(i), deviceInfo);
         }
-        BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this, this.eventNames, childList);
+        BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this,this, this.eventNames, childList, eventDurations);
         //ArrayAdapter(Context context, int resource, int textViewResourceId, T[] objects);
 
         expandableListView.setAdapter(adapter);
@@ -312,15 +314,51 @@ public class Version2 extends Activity {
 //        spec.setContent(new Intent(this, PreviousHistory.class));
 //        spec.setIndicator("Tab Three");
     //    host.addTab(spec);
+        TabLayout tabLayout = new TabLayout(this);
+        final TabLayout.Tab homeTab = tabLayout.newTab();
+        final TabLayout.Tab calendarTab = tabLayout.newTab();
+        final TabLayout.Tab historyTab = tabLayout.newTab();
+        homeTab.setIcon(R.drawable.home_icon);
+        calendarTab.setIcon(R.drawable.calendar_icon);
+        historyTab.setIcon(R.drawable.history_icon);
+        tabLayout.addTab(homeTab);
+        tabLayout.addTab(calendarTab);
+        tabLayout.addTab(historyTab);
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
 
+                RelativeLayout tabLayout = (RelativeLayout) findViewById(R.id.tabLayout);
+                if(tab == homeTab){
+//                    homeTab.setContent(new Intent(this, PreviousHistory.class));
+
+                }else if(tab == calendarTab){
+
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        ((RelativeLayout) findViewById(R.id.mainScreenLayout)).addView(tabLayout);
     }
 
-    private void finishedAnEvent(final String title){
+    public void finishedAnEvent(final String title){
             new AlertDialog.Builder(this)
                     .setTitle("Event Finished")
                     .setMessage("Are you sure you've finished "+ title+"?")
                     .setIcon(R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int whichButton) {
                             DataBaseOperations dbo = new DataBaseOperations(Version2.this);
@@ -329,7 +367,7 @@ public class Version2 extends Activity {
                             Toast.makeText(Version2.this, "You have finished an event!", Toast.LENGTH_LONG).show();
                         }
                     })
-                    .setNegativeButton(android.R.string.no, null).show();
+                    .setNegativeButton("no", null).show();
     }
 
     private void setExpandableListEvents(){
@@ -352,8 +390,8 @@ public class Version2 extends Activity {
             deviceInfo.add("Subtract Time");
             childList.put(eventNames.get(i), deviceInfo);
         }
-        BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this, eventNames, childList);
-        expandableListView.setAdapter(adapter);
+        //BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this,this, eventNames, childList);
+        //expandableListView.setAdapter(adapter);
     }
 
     private void resetEventsDuration(DataBaseOperations dbo){

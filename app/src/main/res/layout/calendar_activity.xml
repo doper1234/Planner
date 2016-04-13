@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:id="@+id/calendarScrollView"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/space2"
-        android:background="@color/scrollingBackground">
+        android:background="@color/scrollingBackground"
+        android:layout_below="@+id/space2">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,15 +45,16 @@
         android:text="@string/back_button"
         android:id="@+id/backButtonCalendar"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible" />
 
     <CalendarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/calendarView"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/calendarScrollView" />
+        android:layout_above="@+id/calendarScrollView"
+        android:layout_below="@+id/textView9" />
 
     <TextView
         android:layout_width="match_parent"
@@ -66,12 +67,22 @@
         android:background="@color/scrollingBackground"
         android:textAlignment="center" />
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back_to_today"
-        android:id="@+id/backToTodayButton"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Calendar"
+        android:id="@+id/textView9"
+        android:textSize="40dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/today_icon"
+        android:id="@+id/backToTodayButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme" >
         <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-        <activity android:name=".Version2" >
+        <activity android:name=".SlideScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -63,6 +63,8 @@
         <activity android:name=".ChangeColourStatic" >
         </activity>
         <activity android:name=".BluetoothNew" >
+        </activity>
+        <activity android:name=".Version2" >
         </activity>
     </application>
 

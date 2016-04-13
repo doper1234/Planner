@@ -13,6 +13,9 @@ order events by dragging, or buttons up and down
 add reminder option
 transfer to another device
 move to tomorrow, once or permenantly
+show unfinished events if there are unfinished events
+set alarms on app first start up
+tabs for home, calendar and history
 
 
 
