@@ -338,12 +338,12 @@ public class MainActivity extends Activity {
                 DataBaseOperations dbo = new DataBaseOperations(ctx);
 
                 if(editing){
-                        dbo.updateEventEdited(this, dbo, title, frequency, Integer.toString(duration));
+                        dbo.updateEventEdited( dbo, title, frequency, Integer.toString(duration));
                         mainScreen();
                         Toast.makeText(ctx, "Event saved!", Toast.LENGTH_LONG).show();
                 }else{
                         if(!dbo.doesEventNameAlreadyExist(dbo, title)){
-                                dbo.putInformation(this, dbo, title, frequency, duration);
+                                dbo.putInformation(dbo, title, frequency, duration);
                                 mainScreen();
                                 Toast.makeText(ctx, "Event saved!", Toast.LENGTH_LONG).show();
                         }

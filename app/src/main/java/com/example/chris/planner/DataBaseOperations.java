@@ -111,7 +111,7 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         return sq.query(TABLE_NAME, columns, null, null, null, null, null);
     }
 
-    public void putInformation(Activity ma, DataBaseOperations dbo, String eventName, String eventFrequency, int eventDuration){
+    public void putInformation(DataBaseOperations dbo, String eventName, String eventFrequency, int eventDuration){
 
         if(!doesEventNameAlreadyExist(dbo, eventName)){
             SQLiteDatabase sqlDB = dbo.getWritableDatabase();
@@ -124,12 +124,12 @@ public class DataBaseOperations extends SQLiteOpenHelper {
             long k = sqlDB.insert(TableInfo.TABLE_NAME, null, cv);
             Log.d("Database operations", "One raw inserted");
         }else{
-            new AlertDialog.Builder(ma)
-                    .setTitle("Invalid input")
-                    .setMessage(eventName + " already exists. Use a different name")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, null)
-                    .show();
+//            new AlertDialog.Builder(ma)
+//                    .setTitle("Invalid input")
+//                    .setMessage(eventName + " already exists. Use a different name")
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .setPositiveButton(android.R.string.yes, null)
+//                    .show();
         }
 
     }
@@ -139,6 +139,13 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.EVENT_FINISHED};
         //String args = "WHERE " + TableInfo.EVENT_FREQUENCY + " =? " + day + " OR " + TableInfo.EVENT_FREQUENCY + " =? " + date;
         return sq.query(TableInfo.TABLE_NAME, columns, /*args*/null, null, null, null, null);
+    }
+
+    public Cursor getInformation(DataBaseOperations dbo, String title){
+        SQLiteDatabase sq = dbo.getWritableDatabase();
+        String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.INITIAL_EVENT_DURATION,TableInfo.EVENT_FINISHED};
+        String args =TableInfo.EVENT_NAME + " LIKE '%"+title+"%'";
+        return sq.query(TableInfo.TABLE_NAME, columns, args, null, null, null, null);
     }
 
     public Cursor getInformation(DataBaseOperations dbo, String day, String date){
@@ -180,7 +187,7 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         return cr.moveToFirst();
     }
 
-    public void updateEventEdited(Activity ma,DataBaseOperations dbo, String eventTitle, String frequency, String duration){
+    public void updateEventEdited(DataBaseOperations dbo, String eventTitle, String frequency, String duration){
         //if(!doesEventNameAlreadyExist(dbo, eventTitle)){
             SQLiteDatabase sq = dbo.getWritableDatabase();
             ContentValues values = new ContentValues();

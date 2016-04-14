@@ -4,8 +4,12 @@ package com.example.chris.planner;
  * Created by Chris on 08/04/2016.
  */
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.SeekBar;
@@ -99,8 +105,6 @@ public class EventListAdapter extends ArrayAdapter<String> {
 
     };
 
-
-
         private void setListPopup(final ImageView t, final String title, final int duration){
             String[] options = this.options;
             int[] imageResources = {
@@ -126,25 +130,54 @@ public class EventListAdapter extends ArrayAdapter<String> {
             listPopupWindow.setWidth(340);
             listPopupWindow.setHeight(400);
 
+            final String firstOption = options[0];
             listPopupWindow.setModal(true);
             listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //Toast.makeText(ctx, options[position], Toast.LENGTH_LONG).show();
                     //showSubtractPopup(title);
-                    switch (position) {
-                        case 0: showSubtractPopup(title, duration);
-                            break;
-                        case 1:
-                            listPopupWindow.dismiss();
-                            break;
-                        case 2: if (activity instanceof Version2) {
-                            //((Version2) activity).de(title);
+                    if (firstOption.equalsIgnoreCase("subtract time")) {
+                        switch (position) {
+                            case 0:
+                                showSubtractPopup(title, duration);
+                                listPopupWindow.dismiss();
+                                break;
+
+                            case 1:
+                                showMoveEventToTomorrow(title);
+                                listPopupWindow.dismiss();
+                                break;
+
+                            case 2:
+                                showEventEdit(title);
+                                listPopupWindow.dismiss();
+                                break;
+
+                            case 3:
+                                deleteEvent(title);
+                                listPopupWindow.dismiss();
+                                break;
                         }
-                            listPopupWindow.dismiss();
-                            break;
+                    } else {
+                        switch (position) {
+                            case 0:
+                                showMoveEventToTomorrow(title);
+                                listPopupWindow.dismiss();
+                                break;
+
+                            case 1:
+                                showEventEdit(title);
+                                listPopupWindow.dismiss();
+                                break;
+
+                            case 2:
+                                deleteEvent(title);
+                                listPopupWindow.dismiss();
+                                break;
+                        }
                     }
-                    listPopupWindow.dismiss();
+
                 }
             });
 
@@ -236,6 +269,406 @@ public class EventListAdapter extends ArrayAdapter<String> {
 //        };
 //        ListPopupWindow subtractListPopupWindow = new ListPopupWindow(ctx);
 //        subtractListPopupWindow.setAdapter(new ArrayAdapter(ctx, R.layout.subtract_time_layout, R.id.subtractTimeTextView, titles));
+
+        }
+
+        private void showEventEdit(String title){
+            final Dialog yourDialog = new Dialog(activity);
+            LayoutInflater inflater = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
+            View layout = inflater.inflate(R.layout.new_event, (ViewGroup) activity.findViewById(R.id.newEventMainLayout));
+            yourDialog.setTitle("Edit " + title);
+            yourDialog.setContentView(layout);
+            setupEditEvent(yourDialog, title);
+            yourDialog.show();
+        }
+
+        private void setupEditEvent(final Dialog d, String title){
+            //String newTitle;
+            setupCheckBoxListeners(d);
+            DataBaseOperations dbo = new DataBaseOperations(ctx);
+            Cursor eventData = dbo.getInformation(dbo, title);
+            String frequency = "";
+            int duration = 0;
+            if(eventData.moveToFirst()){
+                frequency = eventData.getString(1);
+                duration = Integer.parseInt(eventData.getString(2));
+            }
+
+//            Button deleteButton = (Button) d.findViewById(R.id.deleteButton);
+//            deleteButton.setVisibility(View.VISIBLE);
+//            deleteButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    new AlertDialog.Builder(ctx)
+//                            .setTitle("Delete event?")
+//                            .setMessage("Delete " + title + "?")
+//                            .setIcon(android.R.drawable.ic_dialog_alert)
+//                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//
+//                                public void onClick(DialogInterface dialog, int whichButton) {
+//                                    deleteEvent(title, frequency, duration);
+//                                    startActivity(new Intent(NewEventScreen.this, Version2.class));
+//                                    //mainScreen();
+//                                    Toast.makeText(ctx, "Event deleted!", Toast.LENGTH_LONG).show();
+//                                }
+//                            })
+//                            .setNegativeButton(android.R.string.no, null).show();
+//
+//                }
+//            });
+            EditText eventTitle = (EditText) d.findViewById(R.id.eventTitle);
+            eventTitle.setText(title);
+            setCheckBoxes(d, frequency);
+            final SeekBar timeSeekBar = (SeekBar) d.findViewById(R.id.seekBar);
+            timeSeekBar.setProgress(duration);
+            setDuration(d);
+            timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    TextView timeView = (TextView) d.findViewById(R.id.timeView);
+                    int minutes = seekBar.getProgress();
+                    int hours = minutes / 60;
+                    if (minutes == 1) {
+                        timeView.setText(minutes + " minute");
+                    } else if (minutes >= 60) {
+                        timeView.setText(hours + " hour " + minutes % 60 + " minutes");
+                    } else {
+                        timeView.setText(minutes + " minutes");
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            Button addToPlanner = (Button) d.findViewById(R.id.addToEventsButton);
+            addToPlanner.setText("save");
+            addToPlanner.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TextView titleView = (TextView) d.findViewById(R.id.eventTitle);
+                    final String newTitle = titleView.getText().toString();
+                    new AlertDialog.Builder(ctx)
+                            .setTitle("Save event?")
+                            .setMessage("Save "+ newTitle+"?")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    final int duration = timeSeekBar.getProgress();
+                                    if (!getFrequency(d).equalsIgnoreCase("")) {
+                                        saveEvent(newTitle, getFrequency(d), duration);
+                                        Toast.makeText(ctx, "yes", Toast.LENGTH_LONG);
+                                    } else {
+                                        Toast.makeText(ctx,"nope", Toast.LENGTH_LONG);
+                                        new AlertDialog.Builder(ctx)
+                                                .setTitle("Invalid input")
+                                                .setMessage("You must select a day or date first")
+                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                .setPositiveButton(android.R.string.yes, null);
+                                    }
+
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null).show();
+//                                                }})
+//                                        .setNegativeButton(android.R.string.no, null).show();10
+
+
+                }
+            });
+            Button cancel = (Button) d.findViewById(R.id.cancelButton);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    d.dismiss();
+                }
+            });
+        }
+
+    private void setDuration(Dialog d){
+        TextView timeView = (TextView) d.findViewById(R.id.timeView);
+        SeekBar timeSeekBar = (SeekBar) d.findViewById(R.id.seekBar);
+        int minutes = timeSeekBar.getProgress();
+        int hours = minutes /60;
+        if(minutes == 1){
+            timeView.setText(minutes + " minute");
+        }else if (minutes >=60){
+            timeView.setText(hours + " hour " + minutes % 60 + " minutes");
+        }else{
+            timeView.setText(minutes + " " + ctx.getResources().getText(R.string.minutes));
+        }
+    }
+
+    private void setCheckBoxes(Dialog d, String frequency){
+        CheckBox mondayCheckBox, tuesdayCheckBox, wednesdayCheckBox, thursdayCheckBox, fridayCheckBox, saturdayCheckBox, sundayCheckBox, onceAMonthCheckbox;
+        if(frequency.contains("monday")){
+            mondayCheckBox = (CheckBox) d.findViewById(R.id.mondayCheckBox);
+            mondayCheckBox.setChecked(true);
+        }
+        if(frequency.contains("tuesday")){
+            tuesdayCheckBox = (CheckBox) d.findViewById(R.id.tuesdayCheckBox);
+            tuesdayCheckBox.setChecked(true);
+        }
+        if(frequency.contains("wednesday")){
+            wednesdayCheckBox = (CheckBox) d.findViewById(R.id.wednesdayCheckBox);
+            wednesdayCheckBox.setChecked(true);
+        }
+        if(frequency.contains("thursday")){
+            thursdayCheckBox = (CheckBox) d.findViewById(R.id.thursdayCheckBox);
+            thursdayCheckBox.setChecked(true);
+        }
+        if(frequency.contains("friday")){
+            fridayCheckBox = (CheckBox) d.findViewById(R.id.fridayCheckBox);
+            fridayCheckBox.setChecked(true);
+        }
+        if(frequency.contains("saturday")){
+            saturdayCheckBox = (CheckBox) d.findViewById(R.id.saturdayCheckBox);
+            saturdayCheckBox.setChecked(true);
+        }
+        if(frequency.contains("sunday")){
+            sundayCheckBox = (CheckBox) d.findViewById(R.id.sundayCheckBox);
+            sundayCheckBox.setChecked(true);
+        }
+        try{
+            Integer.parseInt(frequency);
+            onceAMonthCheckbox = (CheckBox) d.findViewById(R.id.onceAMonthCheckBox);
+            onceAMonthCheckbox.setChecked(true);
+            EditText specificDateEditText = (EditText) d.findViewById(R.id.specificDateEditText);
+            specificDateEditText.setText(frequency);
+            specificDateEditText.setEnabled(true);
+        }catch(NumberFormatException e){
+
+        }
+
+    }
+
+    private void setupCheckBoxListeners(Dialog d){
+        final CheckBox mondayCheckBox, tuesdayCheckBox, wednesdayCheckBox, thursdayCheckBox, fridayCheckBox, saturdayCheckBox, sundayCheckBox, onceAMonthCheckbox;
+        mondayCheckBox = (CheckBox) d.findViewById(R.id.mondayCheckBox);
+        tuesdayCheckBox = (CheckBox) d.findViewById(R.id.tuesdayCheckBox);
+        wednesdayCheckBox = (CheckBox) d.findViewById(R.id.wednesdayCheckBox);
+        thursdayCheckBox = (CheckBox) d.findViewById(R.id.thursdayCheckBox);
+        fridayCheckBox = (CheckBox) d.findViewById(R.id.fridayCheckBox);
+        saturdayCheckBox = (CheckBox) d.findViewById(R.id.saturdayCheckBox);
+        sundayCheckBox = (CheckBox) d.findViewById(R.id.sundayCheckBox);
+        onceAMonthCheckbox = (CheckBox) d.findViewById(R.id.onceAMonthCheckBox);
+        final EditText eventTitleEditText = (EditText) d.findViewById(R.id.eventTitle);
+        eventTitleEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                eventTitleEditText.setText("");
+                return false;
+            }
+        });
+        final EditText specificDateEditText = (EditText) d.findViewById(R.id.specificDateEditText);
+        specificDateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                specificDateEditText.setText("");
+            }
+        });
+        mondayCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mondayCheckBox.isChecked()) {
+                    if (onceAMonthCheckbox.isChecked()) {
+                        onceAMonthCheckbox.setChecked(false);
+                        specificDateEditText.setEnabled(false);
+                    }
+                }
+            }
+        });
+        tuesdayCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tuesdayCheckBox.isChecked()) {
+                    if (onceAMonthCheckbox.isChecked()) {
+                        onceAMonthCheckbox.setChecked(false);
+                        specificDateEditText.setEnabled(false);
+                    }
+                }
+            }
+        });
+        wednesdayCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (wednesdayCheckBox.isChecked()) {
+                    if (onceAMonthCheckbox.isChecked()) {
+                        onceAMonthCheckbox.setChecked(false);
+                        specificDateEditText.setEnabled(false);
+                    }
+                }
+            }
+        });
+        thursdayCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (thursdayCheckBox.isChecked()) {
+                    if (onceAMonthCheckbox.isChecked()) {
+                        onceAMonthCheckbox.setChecked(false);
+                        specificDateEditText.setEnabled(false);
+                    }
+                }
+            }
+        });
+        fridayCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fridayCheckBox.isChecked()) {
+                    if (onceAMonthCheckbox.isChecked()) {
+                        onceAMonthCheckbox.setChecked(false);
+                        specificDateEditText.setEnabled(false);
+                    }
+                }
+            }
+        });
+        saturdayCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (saturdayCheckBox.isChecked()) {
+                    if (onceAMonthCheckbox.isChecked()) {
+                        onceAMonthCheckbox.setChecked(false);
+                        specificDateEditText.setEnabled(false);
+                    }
+                }
+            }
+        });
+        sundayCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(sundayCheckBox.isChecked()){
+                    if(onceAMonthCheckbox.isChecked()){
+                        onceAMonthCheckbox.setChecked(false);
+                        specificDateEditText.setEnabled(false);
+                    }
+                }
+            }
+        });
+        onceAMonthCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onceAMonthCheckbox.isChecked()){
+                    specificDateEditText.setEnabled(true);
+                    if(mondayCheckBox.isChecked()){
+                        mondayCheckBox.setChecked(false);
+                    }
+                    if(tuesdayCheckBox.isChecked()){
+                        tuesdayCheckBox.setChecked(false);
+                    }
+                    if(wednesdayCheckBox.isChecked()){
+                        wednesdayCheckBox.setChecked(false);
+                    }
+                    if(thursdayCheckBox.isChecked()){
+                        thursdayCheckBox.setChecked(false);
+                    }
+                    if(fridayCheckBox.isChecked()){
+                        fridayCheckBox.setChecked(false);
+                    }
+                    if(saturdayCheckBox.isChecked()){
+                        saturdayCheckBox.setChecked(false);
+                    }
+                    if(sundayCheckBox.isChecked()){
+                        sundayCheckBox.setChecked(false);
+                    }
+                }
+            }
+        });
+
+    }
+
+    private String getFrequency(Dialog d){
+        String frequency = "";
+        CheckBox mondayCheckBox, tuesdayCheckBox, wednesdayCheckBox, thursdayCheckBox, fridayCheckBox, saturdayCheckBox, sundayCheckBox, onceAMonthCheckbox;
+        mondayCheckBox = (CheckBox) d.findViewById(R.id.mondayCheckBox);
+        tuesdayCheckBox = (CheckBox) d.findViewById(R.id.tuesdayCheckBox);
+        wednesdayCheckBox = (CheckBox) d.findViewById(R.id.wednesdayCheckBox);
+        thursdayCheckBox = (CheckBox) d.findViewById(R.id.thursdayCheckBox);
+        fridayCheckBox = (CheckBox) d.findViewById(R.id.fridayCheckBox);
+        saturdayCheckBox = (CheckBox) d.findViewById(R.id.saturdayCheckBox);
+        sundayCheckBox = (CheckBox) d.findViewById(R.id.sundayCheckBox);
+        onceAMonthCheckbox = (CheckBox) d.findViewById(R.id.onceAMonthCheckBox);
+        EditText specificDateEditText = (EditText) d.findViewById(R.id.specificDateEditText);
+        mondayCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        if(mondayCheckBox.isChecked()){
+            frequency = frequency + "monday ";
+        }
+        if(tuesdayCheckBox.isChecked()){
+            frequency = frequency + "tuesday ";
+        }
+        if(wednesdayCheckBox.isChecked()){
+            frequency = frequency + "wednesday ";
+        }
+        if(thursdayCheckBox.isChecked()){
+            frequency = frequency + "thursday ";
+        }
+        if(fridayCheckBox.isChecked()){
+            frequency = frequency + "friday ";
+        }
+        if(saturdayCheckBox.isChecked()){
+            frequency = frequency + "saturday ";
+        }
+        if(sundayCheckBox.isChecked()){
+            frequency = frequency + "sunday ";
+        }
+        if(onceAMonthCheckbox.isChecked()){
+            try{
+                int freq = Integer.parseInt(specificDateEditText.getText().toString());
+                if(freq >0 && freq < 32){
+                    frequency = specificDateEditText.getText().toString();
+                }else{
+                    new AlertDialog.Builder(ctx)
+                            .setTitle("Invalid input")
+                            .setMessage(specificDateEditText.getText().toString() + " is not a valid date.")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(android.R.string.yes, null)
+                            .show();
+                }
+            }catch(NumberFormatException e){
+                new AlertDialog.Builder(ctx)
+                        .setTitle("Invalid input")
+                        .setMessage(specificDateEditText.getText().toString() + " is not a valid date.")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, null)
+                        .show();
+            }
+
+        }
+
+        return frequency;
+    }
+
+    private void saveEvent(String title, String frequency, int duration){
+        DataBaseOperations dbo = new DataBaseOperations(ctx);
+        dbo.deleteEvent(dbo, title, frequency, Integer.toString(duration));
+        dbo.putInformation(dbo, title, frequency, duration);
+
+    }
+
+        private void showMoveEventToTomorrow(String title){
+            new AlertDialog.Builder(activity)
+                        .setTitle("Move event")
+                        .setMessage("Move " + title + " to tomorrow?")
+                        .setIcon(R.drawable.ic_dialog_alert)
+                        .setPositiveButton("forever", null)
+                        .setNegativeButton("once", null)
+                        .setNeutralButton("cancel", null)
+
+                        .show();
+        }
+
+        private void deleteEvent(String title){
 
         }
     }

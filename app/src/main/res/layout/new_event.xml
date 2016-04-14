@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/newEventMainLayout">
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/newEventMainLayout"
+    android:background="@color/scrollingBackground"
+    >
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawableTint="@color/small_icon_colour"
+        android:backgroundTint="@color/small_icon_colour"
+        android:foregroundTint="@color/small_icon_colour"
         android:inputType="textPersonName"
         android:text="@string/default_field_name"
         android:ems="10"
@@ -19,51 +24,79 @@
         android:text="@string/frequency"
         android:id="@+id/textView" />
 
-    <CheckBox
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/monday"
-        android:id="@+id/mondayCheckBox" />
+        android:paddingBottom="10dp"
+        android:id="@+id/weekDayCheckboxesLinearLayout">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/monday"
+                android:buttonTint="@color/small_icon_colour"
+                android:id="@+id/mondayCheckBox" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/small_icon_colour"
+                android:text="@string/tuesday"
+                android:id="@+id/tuesdayCheckBox" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/small_icon_colour"
+                android:text="@string/wednesday"
+                android:id="@+id/wednesdayCheckBox" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/small_icon_colour"
+                android:text="@string/thursday"
+                android:id="@+id/thursdayCheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/small_icon_colour"
+                android:text="@string/friday"
+                android:id="@+id/fridayCheckBox" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/small_icon_colour"
+                android:text="@string/saturday"
+                android:id="@+id/saturdayCheckBox" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/small_icon_colour"
+                android:text="@string/sunday"
+                android:id="@+id/sundayCheckBox" />
+        </LinearLayout>
+    </LinearLayout>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tuesday"
-        android:id="@+id/tuesdayCheckBox" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/wednesday"
-        android:id="@+id/wednesdayCheckBox" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/thursday"
-        android:id="@+id/thursdayCheckBox" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/friday"
-        android:id="@+id/fridayCheckBox" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/saturday"
-        android:id="@+id/saturdayCheckBox" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sunday"
-        android:id="@+id/sundayCheckBox" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:buttonTint="@color/small_icon_colour"
         android:text="@string/once_a_month"
         android:id="@+id/onceAMonthCheckBox" />
 
@@ -74,7 +107,8 @@
         android:ems="10"
         android:id="@+id/specificDateEditText"
         android:layout_gravity="center_horizontal"
-        android:text="@string/enter_date" />
+        android:text="@string/enter_date"
+        android:enabled="false" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -86,6 +120,8 @@
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:progressTint="@color/small_icon_colour"
+        android:thumbTint="@color/small_icon_colour"
         android:id="@+id/seekBar"
         android:max="120" />
 
@@ -97,23 +133,40 @@
         android:id="@+id/timeView"
         android:textAlignment="center" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_to_planner"
-        android:id="@+id/addToEventsButton" />
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAlignment="viewEnd">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/cancel_button"
-        android:id="@+id/cancelButton" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="@string/cancel_button"
+            android:background="@drawable/pixel_test_icon"
+            android:id="@+id/cancelButton"
+            android:textColor="#FFFFFF"
+            android:layout_margin="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/delete_button"
-        android:id="@+id/deleteButton"
-        android:visibility="invisible" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_button"
+            android:id="@+id/deleteButton"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@drawable/pixel_test_icon"
+            android:text="@string/add_to_planner"
+            android:id="@+id/addToEventsButton"
+            android:textColor="#FFFFFF"
+            android:layout_margin="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 
 </LinearLayout>

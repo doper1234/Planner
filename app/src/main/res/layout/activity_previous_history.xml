@@ -18,16 +18,25 @@
         android:layout_alignParentStart="true"
         android:textSize="40dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Click an icon to view today&apos;s finished events, unfinished events from yesterday or search all your events to find a specific event."
+        android:id="@+id/historyDescriptionTextView"
+        android:layout_below="@+id/historyTextView"
+        android:layout_alignEnd="@+id/historyEmptyView" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/historyScrollView"
         android:layout_alignParentStart="true"
-        android:background="#cccccc"
+        android:background="@color/scrollingBackground"
         android:textAlignment="center"
         android:paddingBottom="10dp"
-        android:layout_below="@+id/historyTextViewInfo"
-        android:layout_above="@+id/historyButtonsLinearLayout">
+        android:layout_above="@+id/historyButtonsLinearLayout"
+        android:layout_below="@+id/historyDescriptionTextView">
 
         <LinearLayout
             android:orientation="vertical"
@@ -44,16 +53,16 @@
         android:id="@+id/historyEmptyView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:visibility="invisible" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/historyTextViewInfo"
-        android:layout_below="@+id/historyTextView"
-        android:layout_toStartOf="@+id/historyTodayButton"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/historyDescriptionTextView"
+        android:layout_alignStart="@+id/historyEmptyView" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -90,6 +99,13 @@
             android:id="@+id/historyBackButton"
             android:layout_alignTop="@+id/historyTodayButton"
             android:layout_toEndOf="@+id/historyTodayButton" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/searchEditText"
+            android:layout_weight="1"
+            android:enabled="false" />
     </LinearLayout>
 
 </RelativeLayout>

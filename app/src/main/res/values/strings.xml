@@ -25,6 +25,11 @@
     <string name="yesterday">Yesterday</string>
     <string name="today_history">Events you have finished today</string>
     <string name="yesterday_history">Unfinished events from yesterday</string>
+    <!-- history descriptions-->
+    <string name="default_description">Click an icon to view todays finished events unfinished events from yesterday or search all your events to find a specific event.</string>
+    <string name="search_description">Search through your entire event database to view or edit your events</string>
+    <string name="finished_events_description">These are the events you have finished today</string>
+    <string name="unfinished_events_description">Here you can view all the events that you didnt finish yesterday</string>
 
     <!-- colour themes strings-->
     <string name="colour_theme_title">Colour Themes</string>

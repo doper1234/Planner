@@ -255,7 +255,7 @@ public class BluetoothActivity extends Activity {
                       CheckBox checkBox = new CheckBox(this);
                       checkBox.setChecked(true);
                     t1.setText("New event: " + eventInfo[1] + " Frequency: " + eventInfo[2] + " Duration: " + eventInfo[4]);
-                    dbo.putInformation(this, dbo, eventInfo[1], eventInfo[2], Integer.parseInt(eventInfo[4]));
+                    dbo.putInformation(dbo, eventInfo[1], eventInfo[2], Integer.parseInt(eventInfo[4]));
                       linearLayout.addView(t1);
                       linearLayout.addView(checkBox);
                       ll.addView(linearLayout);

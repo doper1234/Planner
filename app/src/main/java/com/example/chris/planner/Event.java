@@ -621,12 +621,12 @@ public class Event {
         DataBaseOperations dbo = new DataBaseOperations(ma);
 
         if(editing){
-            dbo.updateEventEdited(ma, dbo, title, frequency, Integer.toString(duration));
+            dbo.updateEventEdited(dbo, title, frequency, Integer.toString(duration));
             ma.setContentView(R.layout.new_event);
             Toast.makeText(ma, "Event saved!", Toast.LENGTH_LONG).show();
         }else{
             if(!dbo.doesEventNameAlreadyExist(dbo, title)){
-                dbo.putInformation(ma, dbo, title, frequency, duration);
+                dbo.putInformation(dbo, title, frequency, duration);
                 ma.setContentView(R.layout.new_event);
                 Toast.makeText(ma, "Event saved!", Toast.LENGTH_LONG).show();
             }

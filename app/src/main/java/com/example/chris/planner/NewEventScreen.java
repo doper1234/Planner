@@ -473,12 +473,12 @@ public class NewEventScreen extends Activity {
         DataBaseOperations dbo = new DataBaseOperations(this);
 
         if(editing){
-            dbo.updateEventEdited(this, dbo, newTitle, frequency, Integer.toString(duration));
+            dbo.updateEventEdited(dbo, newTitle, frequency, Integer.toString(duration));
             startActivity(new Intent(this, Version2.class));
             Toast.makeText(this, "Event saved!", Toast.LENGTH_LONG).show();
         }else{
             if(!dbo.doesEventNameAlreadyExist(dbo, title)){
-                dbo.putInformation(this, dbo, title, frequency, duration);
+                dbo.putInformation(dbo, title, frequency, duration);
                 startActivity(new Intent(this, Version2.class));
                 Toast.makeText(this, "Event saved!", Toast.LENGTH_LONG).show();
             }
