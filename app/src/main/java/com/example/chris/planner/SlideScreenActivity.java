@@ -165,7 +165,12 @@ public class SlideScreenActivity extends FragmentActivity {
                     } else if (optionSelected.equalsIgnoreCase("Change Colour Theme")) {
                         startActivity(new Intent(SlideScreenActivity.this, ChangeColourStatic.class));
                     } else if (optionSelected.equalsIgnoreCase("Alarm Settings")) {
-                        //startActivity(new Intent(SettingsActivity.this, AlarmSettings.class));
+                        final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
+                        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.alarm_settings, (ViewGroup)findViewById(R.id.alarmSettingsRootLayout));
+                        yourDialog.setTitle("Alarm Settings");
+                        yourDialog.setContentView(layout);
+                        yourDialog.show();
                     } else if (optionSelected.equalsIgnoreCase("Delete all events")) {
                         new AlertDialog.Builder(SlideScreenActivity.this)
                                 .setTitle("Delete everything?")

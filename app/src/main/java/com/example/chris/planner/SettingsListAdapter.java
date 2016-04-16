@@ -4,7 +4,8 @@ package com.example.chris.planner;
  * Created by Chris on 08/04/2016.
  */
 import android.app.Activity;
-        import android.view.LayoutInflater;
+import android.app.Dialog;
+import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
         import android.widget.ArrayAdapter;
