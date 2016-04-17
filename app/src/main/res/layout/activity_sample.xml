@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="360dp"
+    android:layout_height="620dp" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.chris.planner.SampleActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Click this icon to add a new event"
+        android:id="@+id/helpInstructionsView"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="next"
+        android:id="@+id/helpNextButton"
+        android:layout_below="@+id/helpInstructionsView"
+        android:layout_toStartOf="@+id/helpExitButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="exit tutorial"
+        android:id="@+id/helpExitButton"
+        android:layout_alignTop="@+id/helpNextButton"
+        android:layout_alignEnd="@+id/helpInstructionsView" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/new_event_icon_pressed"
+            android:id="@+id/helpNewButton"
+            android:textSize="10dp"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/helpHomeIcon"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/home_icon_pressed"
+            android:visibility="invisible"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/helpCalendarIcon" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/helpCalendarIcon"
+            android:layout_marginRight="20dp"
+            android:textSize="10sp"
+            android:src="@drawable/calendar_icon_pressed"
+            android:visibility="invisible"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/helpHistoryIcon"
+            android:textSize="10sp"
+            android:src="@drawable/history_icon_pressed"
+            android:visibility="invisible"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/helpCalendarIcon" />
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/settings_icon"
+            android:id="@+id/helpSettingsIcon"
+            android:textSize="10dp"
+            android:visibility="invisible"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/helpNewPointer"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/pointer_icon"
+            android:layout_below="@+id/helpNewButton"
+            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/helpNewButton" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/helpHomePointer"
+            android:src="@drawable/pointer_icon"
+            android:layout_alignTop="@+id/helpNewPointer"
+            android:layout_alignStart="@+id/helpHomeIcon"
+            android:layout_alignEnd="@+id/helpHomeIcon"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/helpCalendarPointer"
+            android:src="@drawable/pointer_icon"
+            android:layout_alignTop="@+id/helpHomePointer"
+            android:layout_alignEnd="@+id/helpCalendarIcon"
+            android:contentDescription="@string/idk"
+            android:layout_alignStart="@+id/helpCalendarIcon"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/helpHistoryPointer"
+            android:src="@drawable/pointer_icon"
+            android:layout_alignTop="@+id/helpCalendarPointer"
+            android:layout_alignEnd="@+id/helpHistoryIcon"
+            android:layout_alignStart="@+id/helpHistoryIcon"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/helpFinishedIcon"
+            android:src="@drawable/finished__icon"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -114,4 +114,5 @@
     <string name="notification_title">You have unfinished events</string>
     <string name="notification_text">Finish the events before its too late!</string>
     <string name="title_activity_history">History</string>
+    <string name="idk">idk</string>
 </resources>

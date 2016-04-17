@@ -14,6 +14,9 @@
 
     <color name="small_icon_colour">#99D9EA</color>
 
+    <color name="help_dark_colour">#80FF0000</color>
+
+    <color name="transparent">#C0000000</color>
     <!-- change colour theme colours-->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>

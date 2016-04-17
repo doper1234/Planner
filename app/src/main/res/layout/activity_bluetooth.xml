@@ -6,21 +6,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.chris.planner.BluetoothActivity"
-    android:id="@+id/bluetoothMainLayout">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/bluetooth_title"
-        android:id="@+id/bluetoothTitleView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+    android:id="@+id/bluetoothMainLayout"
+    android:background="@color/scrollingBackground">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back_button"
+        android:text="@string/cancel_button"
         android:id="@+id/bluetoothBackButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
@@ -118,9 +110,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/expandableListView"
         android:textAlignment="center"
-        android:layout_below="@+id/bluetoothTitleView"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/eventsFoundView" />
+        android:layout_above="@+id/eventsFoundView"
+        android:layout_below="@+id/bluetoothStep4" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -158,5 +150,41 @@
         android:layout_above="@+id/bluetoothTransferButton"
         android:layout_alignParentStart="true"
         android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="1. Click &quot;bluetooth on&quot; to turn on Bluetooth."
+        android:id="@+id/bluetoothStep1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="2. Click search to start searching for devices"
+        android:id="@+id/bluetoothStep2"
+        android:layout_below="@+id/bluetoothStep1"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="3. Tap the device that you want to send or receive events from"
+        android:id="@+id/bluetoothStep3"
+        android:layout_below="@+id/bluetoothStep2"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="4. Once the events have been transfered click &quot;load events&quot; to view all events available for download"
+        android:id="@+id/bluetoothStep4"
+        android:layout_below="@+id/bluetoothStep3"
+        android:layout_toEndOf="@+id/connectToPartnerButton" />
 
 </RelativeLayout>

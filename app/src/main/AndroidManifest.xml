@@ -66,6 +66,8 @@
         </activity>
         <activity android:name=".Version2" >
         </activity>
+        <activity android:name=".SampleActivity" android:theme="@style/Theme.Transparent">
+        </activity>
     </application>
 
 </manifest>

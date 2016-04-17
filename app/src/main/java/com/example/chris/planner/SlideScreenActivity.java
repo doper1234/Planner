@@ -30,6 +30,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,12 +48,28 @@ public class SlideScreenActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_screen);
-
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.slideScreenPager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(0);
+
+        ImageView helpIcon = (ImageView) findViewById(R.id.helpIcon);
+        helpIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SlideScreenActivity.this, SampleActivity.class));
+////                RelativeLayout helpLayout = new RelativeLayout(SlideScreenActivity.this);
+////
+////                helpLayout.setBackgroundResource(R.color.help_dark_colour);
+//
+//                final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
+//                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//                View layout = inflater.inflate(R.layout.help_button_explanation, (ViewGroup)findViewById(R.id.helpRootLayout));
+//                yourDialog.setContentView(layout);
+//                yourDialog.show();
+            }
+        });
 
         ImageView homeIcon = (ImageView) findViewById(R.id.homeIcon);
         homeIcon.setOnClickListener(new View.OnClickListener() {
@@ -155,20 +172,40 @@ public class SlideScreenActivity extends FragmentActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String optionSelected = selectionOptions[position];
                     if (optionSelected.equalsIgnoreCase("Change Colour")) {
-                        startActivity(new Intent(SlideScreenActivity.this, ChangeColour.class));
+                        final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
+                        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.activity_change_colour, (ViewGroup)findViewById(R.id.colourMainLayout));
+                        yourDialog.setTitle(optionSelected);
+                        yourDialog.setContentView(layout);
+                        yourDialog.show();
                     } else if (optionSelected.equalsIgnoreCase("Change Font")) {
-                        startActivity(new Intent(SlideScreenActivity.this, ChangeFont.class));
+
                     } else if (optionSelected.equalsIgnoreCase("View All Events")) {
-                        startActivity(new Intent(SlideScreenActivity.this, DisplayAllEvents.class));
+                        final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
+                        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.activity_display_all_events, (ViewGroup)findViewById(R.id.displayMainRelativeLayout));
+                        yourDialog.setTitle(optionSelected);
+                        yourDialog.setContentView(layout);
+                        yourDialog.show();
                     } else if (optionSelected.equalsIgnoreCase("Transfer Data Over Bluetooth")) {
-                        startActivity(new Intent(SlideScreenActivity.this, BluetoothActivity.class));
+                        final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
+                        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.activity_bluetooth, (ViewGroup)findViewById(R.id.bluetoothMainLayout));
+                        yourDialog.setTitle(optionSelected);
+                        yourDialog.setContentView(layout);
+                        yourDialog.show();
                     } else if (optionSelected.equalsIgnoreCase("Change Colour Theme")) {
-                        startActivity(new Intent(SlideScreenActivity.this, ChangeColourStatic.class));
+                        final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
+                        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.activity_change_colour_static, (ViewGroup)findViewById(R.id.changeColourThemeMainLayout));
+                        yourDialog.setTitle(optionSelected);
+                        yourDialog.setContentView(layout);
+                        yourDialog.show();
                     } else if (optionSelected.equalsIgnoreCase("Alarm Settings")) {
                         final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
                         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                         View layout = inflater.inflate(R.layout.alarm_settings, (ViewGroup)findViewById(R.id.alarmSettingsRootLayout));
-                        yourDialog.setTitle("Alarm Settings");
+                        yourDialog.setTitle(optionSelected);
                         yourDialog.setContentView(layout);
                         yourDialog.show();
                     } else if (optionSelected.equalsIgnoreCase("Delete all events")) {
