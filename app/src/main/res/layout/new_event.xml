@@ -140,10 +140,9 @@
         android:textAlignment="viewEnd">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:text="@string/cancel_button"
-            android:background="@drawable/pixel_test_icon"
+            android:background="@drawable/cancel_icon"
             android:id="@+id/cancelButton"
             android:textColor="#FFFFFF"
             android:layout_margin="5dp"
@@ -158,10 +157,9 @@
             android:visibility="gone" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/pixel_test_icon"
-            android:text="@string/add_to_planner"
+            android:background="@drawable/finished_icon"
             android:id="@+id/addToEventsButton"
             android:textColor="#FFFFFF"
             android:layout_margin="5dp"

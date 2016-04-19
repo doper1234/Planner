@@ -29,7 +29,7 @@
             android:layout_width="@dimen/event_height"
             android:layout_height="@dimen/event_height"
             android:paddingRight="5dp"
-            android:src="@drawable/finished__icon"
+            android:src="@drawable/finished_icon"
             android:id="@+id/finishedImageView"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/editEventImageView"

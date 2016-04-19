@@ -8,7 +8,7 @@
         android:layout_height="@dimen/event_child_height"
         android:paddingTop="10dp"
         android:paddingLeft="10dp"
-        android:src="@drawable/pixel_test_icon"
+        android:src="@drawable/alarms_test_icon"
         android:id="@+id/childIconImageView" />
 
     <TextView

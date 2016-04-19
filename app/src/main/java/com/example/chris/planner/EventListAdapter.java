@@ -87,9 +87,9 @@ public class EventListAdapter extends ArrayAdapter<String> {
             public boolean onTouch(View v, MotionEvent event) {
                 Toast.makeText(ctx, timeLeft.get(position) + " pos", Toast.LENGTH_LONG).show();
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.finished__icon_pressed);
+                    ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.finished_icon_pressed);
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.finished__icon);
+                    ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.finished_icon);
                     todayFragment.finishEvent(eventNames.get(position));
                     //finish event
                 }

@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/subtractRootElement"
-    android:backgroundTint="@color/scrollingBackground">
+    android:background="@color/scrollingBackground">
 
     <SeekBar
         android:layout_width="match_parent"
@@ -30,24 +30,23 @@
     <Button
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:text="ok"
         android:layout_margin="5dp"
         android:id="@+id/subtractOkButton"
         android:singleLine="false"
         android:layout_below="@+id/timeToSubtractTextView"
         android:layout_alignParentEnd="true"
         android:textColor="#FFFFFF"
-        android:background="@drawable/pixel_test_icon" />
+        android:background="@drawable/finished_icon" />
 
     <Button
-        android:layout_width="80dp"
+        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:text="cancel"
-        android:layout_margin="5dp"
         android:id="@+id/subtractCancelButton"
         android:textColor="#FFFFFF"
-        android:background="@drawable/pixel_test_icon"
-        android:layout_below="@+id/timeToSubtractTextView"
-        android:layout_alignParentStart="true" />
+        android:background="@drawable/cancel_icon"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignTop="@+id/subtractOkButton"
+        android:layout_toStartOf="@+id/subtractOkButton" />
 
 </RelativeLayout>

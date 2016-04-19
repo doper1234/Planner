@@ -34,7 +34,7 @@
         android:text="@string/apply"
         android:id="@+id/alarmSettingsApplyButton"
         android:textColor="#FFFFFF"
-        android:background="@drawable/pixel_test_icon"
+        android:background="@drawable/alarms_test_icon"
         android:layout_below="@+id/timePicker"
         android:layout_alignParentStart="true" />
 
@@ -44,7 +44,7 @@
         android:text="@string/cancel_button"
         android:id="@+id/alarmSettingsCancelButton"
         android:textColor="#FFFFFF"
-        android:background="@drawable/pixel_test_icon"
+        android:background="@drawable/alarms_test_icon"
         android:layout_below="@+id/timePicker"
         android:layout_alignParentEnd="true" />
 
