@@ -14,7 +14,10 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_margin="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+
             android:src="@drawable/new_white"
             android:id="@+id/imageView2" />
 
@@ -62,11 +65,12 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="30dp"
         android:src="@drawable/add_light"
         android:id="@+id/imageView7"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true" />
 
     <RelativeLayout
         android:orientation="horizontal"
@@ -212,54 +216,6 @@
             android:visibility="visible" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:id="@+id/relativeLayout6"
-        android:visibility="visible"
-        android:layout_below="@+id/relativeLayout5"
-        android:layout_alignParentStart="true">
-
-        <ImageView
-            android:layout_width="@dimen/event_height"
-            android:layout_height="@dimen/event_height"
-            android:paddingRight="5dp"
-            android:src="@drawable/check_blue"
-            android:id="@+id/imageView14"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/imageView15"
-            android:layout_toStartOf="@+id/imageView15"
-            android:visibility="visible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingLeft="5dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Sample Event"
-            android:id="@+id/textView18"
-            android:layout_gravity="center_horizontal"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/imageView14"
-            android:visibility="visible" />
-
-        <ImageView
-            android:layout_width="@dimen/event_height"
-            android:layout_height="@dimen/event_height"
-            android:paddingRight="5dp"
-            android:src="@drawable/more_blue"
-            android:id="@+id/imageView15"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:visibility="visible" />
-    </RelativeLayout>
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -267,8 +223,8 @@
         android:id="@+id/linearLayout3"
         android:visibility="visible"
         android:background="#efe4b0"
-        android:layout_below="@+id/relativeLayout6"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/relativeLayout5">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -281,7 +237,7 @@
                 android:layout_height="50dp"
                 android:padding="5dp"
                 android:src="@drawable/subtract_time_icon"
-                android:id="@+id/imageView16" />
+                android:id="@+id/imageView21" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -289,6 +245,50 @@
                 android:padding="12dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/subtract_time_button"
+                android:id="@+id/textView24" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/scrollingBackground" >
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="5dp"
+                android:src="@drawable/move_up_icon"
+                android:id="@+id/imageView20" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="move up"
+                android:id="@+id/textView23" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/scrollingBackground" >
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="5dp"
+                android:src="@drawable/move_down_icon"
+                android:id="@+id/imageView16" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="move down"
                 android:id="@+id/textView19" />
         </LinearLayout>
 
@@ -324,7 +324,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="5dp"
-                android:src="@drawable/edit_event_icon"
+                android:src="@drawable/edit_blue"
                 android:id="@+id/imageView18" />
 
             <TextView
