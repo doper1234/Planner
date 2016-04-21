@@ -9,10 +9,17 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Chris on 11/04/2016.
@@ -39,21 +46,42 @@ public class HistoryFragment extends Fragment {
                 setupSearch();
             }
         });
-        Button todayButton = (Button) viewID(R.id.historyTodayButton);
-        todayButton.setOnClickListener(new View.OnClickListener() {
+        final Button onButton = (Button) viewID(R.id.onButton);
+        final Button offButton = (Button) viewID(R.id.offButton);
+        onButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onButton.setBackgroundResource(R.color.dark_colour);
+                onButton.setTextColor(getResources().getColor(R.color.black));
+                offButton.setBackgroundResource(R.color.light_colour);
+                offButton.setTextColor(getResources().getColor(R.color.white));
                 setupTodaysFinishedEvents();
             }
         });
-        Button yesterdayButton = (Button) viewID(R.id.yesterdayHistoryButton);
-        yesterdayButton.setOnClickListener(new View.OnClickListener() {
+        offButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                offButton.setBackgroundResource(R.color.dark_colour);
+                offButton.setTextColor(getResources().getColor(R.color.black));
+                onButton.setBackgroundResource(R.color.light_colour);
+                onButton.setTextColor(getResources().getColor(R.color.white));
                 setupYesterdaysUnfinishedEvents();
             }
         });
+        setupTodaysFinishedEvents();
+        Switch historySwitch = (Switch) viewID(R.id.historySwitch);
+        historySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    setupTodaysFinishedEvents();
+                }else{
+                    setupYesterdaysUnfinishedEvents();
+                }
+            }
+        });
         return rootView;
+
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.todaysEventsFragment);
 //        TableData.TableInfo.EDITING = false;
@@ -99,6 +127,8 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+                ListView listView = (ListView) viewID(R.id.historyListView);
+                List<String> events = new ArrayList<String>();
                 LinearLayout linearLayout = (LinearLayout) viewID(R.id.historyLinearLayout);
                 linearLayout.removeAllViews();
                 String searchFor = s.toString();
@@ -108,12 +138,13 @@ public class HistoryFragment extends Fragment {
                     if (dataFound.moveToFirst()) {
                         do {
                             String title = dataFound.getString(0);
-                            TextView titleView = new TextView(getContext());
-                            titleView.setText(title);
-                            linearLayout.addView(titleView);
+                            //TextView titleView = new TextView(getContext());
+                            events.add(title);
+                            //linearLayout.addView(titleView);
                         } while (dataFound.moveToNext());
                     }
                 }
+                listView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.event_child_layout, R.id.eventTitleTextView, events));
             }
 
             @Override
@@ -133,19 +164,23 @@ public class HistoryFragment extends Fragment {
         Cursor dataFound = dbo.getInformation(dbo,TableData.dayOfTheWeek(), TableData.dateOfTheMonth());
         LinearLayout linearLayout = (LinearLayout) viewID(R.id.historyLinearLayout);
         linearLayout.removeAllViews();
+        ListView listView = (ListView) viewID(R.id.historyListView);
+        List<String> events = new ArrayList<String>();
+
         if(dataFound.moveToFirst()){
             do{
 
                 String finished = dataFound.getString(4);
                 if(finished.equalsIgnoreCase("yes")){
                     String title = dataFound.getString(0);
-                    TextView titleView = new TextView(getContext());
-                    titleView.setText(title);
-                    linearLayout.addView(titleView);
+                    //TextView titleView = new TextView(getContext());
+                    events.add(title);
+                    //linearLayout.addView(titleView);
                 }
 
             }while(dataFound.moveToNext());
         }
+        listView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.event_child_layout, R.id.eventTitleTextView, events));
     }
 
     private void setupYesterdaysUnfinishedEvents(){
@@ -159,6 +194,8 @@ public class HistoryFragment extends Fragment {
         Cursor dataFound = dbo.getInformation(dbo,TableData.yesterdayOfTheWeek(), TableData.yesterdayDateOfTheMonth());
         LinearLayout linearLayout = (LinearLayout) viewID(R.id.historyLinearLayout);
         linearLayout.removeAllViews();
+        ListView listView = (ListView) viewID(R.id.historyListView);
+        List<String> events = new ArrayList<String>();
         if(dataFound.moveToFirst()){
             do{
 
@@ -166,14 +203,20 @@ public class HistoryFragment extends Fragment {
                 if(finished.equalsIgnoreCase("no")){
                     String title = dataFound.getString(0);
                     String duration = dataFound.getString(2);
-                    TextView titleView = new TextView(getContext());
-                    titleView.setText(title);
-                    TextView timeLeftView = new TextView(getContext());
-                    timeLeftView.setText(duration);
-                    linearLayout.addView(titleView);
-                    linearLayout.addView((timeLeftView));
+                    //TextView titleView = new TextView(getContext());
+                    if(Integer.parseInt(duration) > 0){
+                        events.add(title + " was unfinished with " + duration + " remaining");
+                    }else{
+                        events.add(title + " was unfinished");
+                    }
+
+//                    TextView timeLeftView = new TextView(getContext());
+//                    timeLeftView.setText(duration);
+//                    linearLayout.addView(titleView);
+//                    linearLayout.addView((timeLeftView));
                 }
             }while(dataFound.moveToNext());
         }
+        listView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.event_child_layout, R.id.eventTitleTextView, events));
     }
 }

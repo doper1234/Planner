@@ -10,14 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ActionMenuView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Chris on 11/04/2016.
@@ -87,28 +91,29 @@ public class CalendarFragment extends Fragment {
     }
 
     private void noEvents(){
-        LinearLayout ll = (LinearLayout) findViewById(R.id.scrollLinearLayout);
-        ll.removeAllViews();
-        TextView display = (TextView) findViewById(R.id.plannedTextView);
-        //display.setText(R.string.planned_on_this_yesterday);
-        TextView t = new TextView(ctx);
-        t.setText("You had no events on this day");
-        ll.addView(t);
+//        LinearLayout ll = (LinearLayout) findViewById(R.id.scrollLinearLayout);
+//        ll.removeAllViews();
+//        TextView display = (TextView) findViewById(R.id.plannedTextView);
+//        //display.setText(R.string.planned_on_this_yesterday);
+//        TextView t = new TextView(ctx);
+//        t.setText("You had no events on this day");
+//        ll.addView(t);
     }
 
     private void getPreviousDayEvents(int dayOfWeek, int dayOfMonth, int month, int year){
+        List<String> eventTitles = new ArrayList<>();
         try{
-            LinearLayout ll = (LinearLayout) findViewById(R.id.scrollLinearLayout);
-            ll.removeAllViews();
-            TextView display = (TextView) findViewById(R.id.plannedTextView);
-            //display.setText(R.string.planned_on_this_yesterday);
-            TextView t = new TextView(ctx);
-            t.setText("Week day: " + dayOfWeek + " date: " + dayOfMonth + " month: " + month + " year:" + year);
-            ll.addView(t);
+//            //LinearLayout ll = (LinearLayout) findViewById(R.id.scrollLinearLayout);
+//            ll.removeAllViews();
+//            TextView display = (TextView) findViewById(R.id.plannedTextView);
+//            //display.setText(R.string.planned_on_this_yesterday);
+//            TextView t = new TextView(ctx);
+//            t.setText("Week day: " + dayOfWeek + " date: " + dayOfMonth + " month: " + month + " year:" + year);
+//            ll.addView(t);
             DataBaseOperations dbo = new DataBaseOperations(ctx);
             dbo.getDayTableInformation(dbo, getWeekDayString(dayOfWeek), dayOfMonth, getMonth(month), year);
 
-            ll.removeAllViews();
+            //ll.removeAllViews();
             TableData.TableInfo.EDITING = true;
             String weekDay = getWeekDayString(dayOfWeek);
             Cursor cr = dbo.getDayTableInformation(dbo, getWeekDayString(dayOfWeek), dayOfMonth, getMonth(month), year);
@@ -121,30 +126,34 @@ public class CalendarFragment extends Fragment {
                     eventFinished = cr.getString(3);
                     TextView eventInfoTextView = new TextView(ctx);
                     if(eventFinished.equalsIgnoreCase("yes")){
-                        eventInfoTextView.setText(eventName + " was finished!");
+                        //eventInfoTextView.setText(eventName + " was finished!");
+                        eventTitles.add(eventName + " was finished!");
                     }else if(!eventFinished.equalsIgnoreCase("yes")  && eventDuration > 0){
                         eventInfoTextView.setText(eventName + " wasn't finished. There were " + eventDuration + " minutes left.");
                         if(eventDuration == 1){
-                            eventInfoTextView.setText(eventName + " wasn't finished. There was one minute left.");
+                            eventTitles.add(eventName + " wasn't finished. There was one minute left.");
                         }
                     }else{
-                        eventInfoTextView.setText(eventName + " wasn't finished.");
+                        eventTitles.add(eventName + " wasn't finished.");
                     }
-                    ll.addView(eventInfoTextView);
+                    //ll.addView(eventInfoTextView);
                 }while(cr.moveToNext());
             }
         }catch(Exception e){
             //e.printStackTrace();
+            eventTitles.add("No events recorded for this day");
             noEvents();
         }
+        ListView listView = (ListView) findViewById(R.id.calendarListView);
+        listView.setAdapter(new ArrayAdapter<>(ctx, R.layout.event_child_layout, R.id.eventTitleTextView, eventTitles));
     }
 
     private void getAndDisplayEvents(int dayOfWeek, int dayOfMonth){
         DataBaseOperations dbo = new DataBaseOperations(ctx);
-        TextView display = (TextView) findViewById(R.id.plannedTextView);
+        //TextView display = (TextView) findViewById(R.id.plannedTextView);
 //        display.setText(R.string.planned_on_this_day);
-        LinearLayout ll = (LinearLayout) findViewById(R.id.scrollLinearLayout);
-        ll.removeAllViews();
+        //LinearLayout ll = (LinearLayout) findViewById(R.id.scrollLinearLayout);
+       // ll.removeAllViews();
         TableData.TableInfo.EDITING = true;
         LinearLayout.LayoutParams llp = new ActionMenuView.LayoutParams(0,0);
 

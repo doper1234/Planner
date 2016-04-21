@@ -42,6 +42,8 @@ public class EventListAdapter extends ArrayAdapter<String> {
     Typeface font;
     String[] options = {
             "subtract time",
+            "move up",
+            "move down",
             "move to tomorrow",
             "edit",
             "delete"
@@ -87,9 +89,9 @@ public class EventListAdapter extends ArrayAdapter<String> {
             public boolean onTouch(View v, MotionEvent event) {
                 Toast.makeText(ctx, timeLeft.get(position) + " pos", Toast.LENGTH_LONG).show();
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.finished_icon_pressed);
+                    ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.check_dark_blue);
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.finished_icon);
+                    ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.check_blue);
                     todayFragment.finishEvent(eventNames.get(position));
                     //finish event
                 }
@@ -109,26 +111,32 @@ public class EventListAdapter extends ArrayAdapter<String> {
             String[] options = this.options;
             int[] imageResources = {
                     R.drawable.subtract_time_icon,
+                    R.drawable.move_up_icon,
+                    R.drawable.move_down_icon,
                     R.drawable.move_event_to_tomorrow_icon,
-                    R.drawable.edit_icon,
+                    R.drawable.edit_blue,
                     R.drawable.delete_all_test_icon
             };
             if(duration == 0){
-                options = new String[3];
+                options = new String[5];
                 options[0] = this.options[1];
                 options[1] = this.options[2];
                 options[2] = this.options[3];
-                imageResources = new int[3];
-                imageResources[0] = R.drawable.move_event_to_tomorrow_icon;
-                imageResources[1] = R.drawable.edit_icon;
-                imageResources[2] = R.drawable.delete_all_test_icon;
+                options[3] = this.options[4];
+                options[4] = this.options[5];
+                imageResources = new int[5];
+                imageResources[0] = R.drawable.move_up_icon;
+                imageResources[1] = R.drawable.move_down_icon;
+                imageResources[2] = R.drawable.move_event_to_tomorrow_icon;
+                imageResources[3] = R.drawable.edit_blue;
+                imageResources[4] = R.drawable.delete_all_test_icon;
 
             }
             final ListPopupWindow listPopupWindow = new ListPopupWindow(context);
             listPopupWindow.setAdapter(new ListPopupWindowAdapter(context, R.layout.more_options_layout, R.id.popTextView, options, imageResources));
             //listPopupWindow.setAdapter(new ArrayAdapter(ctx, R.layout.more_options_layout, R.id.popTextView, options));
             listPopupWindow.setWidth(340);
-            listPopupWindow.setHeight(400);
+            listPopupWindow.setHeight(450);
 
             final String firstOption = options[0];
             listPopupWindow.setModal(true);
@@ -144,17 +152,17 @@ public class EventListAdapter extends ArrayAdapter<String> {
                                 listPopupWindow.dismiss();
                                 break;
 
-                            case 1:
+                            case 3:
                                 showMoveEventToTomorrow(title);
                                 listPopupWindow.dismiss();
                                 break;
 
-                            case 2:
+                            case 4:
                                 showEventEdit(title);
                                 listPopupWindow.dismiss();
                                 break;
 
-                            case 3:
+                            case 5:
                                 deleteEvent(title);
                                 listPopupWindow.dismiss();
                                 break;
@@ -166,12 +174,12 @@ public class EventListAdapter extends ArrayAdapter<String> {
                                 listPopupWindow.dismiss();
                                 break;
 
-                            case 1:
+                            case 3:
                                 showEventEdit(title);
                                 listPopupWindow.dismiss();
                                 break;
 
-                            case 2:
+                            case 4:
                                 deleteEvent(title);
                                 listPopupWindow.dismiss();
                                 break;

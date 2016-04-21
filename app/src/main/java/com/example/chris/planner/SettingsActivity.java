@@ -22,6 +22,7 @@ import java.util.Set;
 
 public class SettingsActivity extends Activity {
 
+
     String[] selectionOptions = {
             "Change Colour",
             "Change Font",

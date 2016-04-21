@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -49,80 +50,199 @@ public class SlideScreenActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_screen);
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.slideScreenPager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new PagerAdapter(getSupportFragmentManager(),5);
         mPager.setAdapter(mPagerAdapter);
-        mPager.setCurrentItem(0);
 
-        ImageView helpIcon = (ImageView) findViewById(R.id.helpIcon);
-        helpIcon.setOnClickListener(new View.OnClickListener() {
+        final ImageView helpIcon = (ImageView) findViewById(R.id.helpIcon);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout.Tab bookTab = tabLayout.newTab().setText("Today").setIcon(R.drawable.home_icon_pressed);
+        final TabLayout.Tab newTab = tabLayout.newTab().setText("Events").setIcon(R.drawable.new_white);
+        tabLayout.addTab(newTab);
+        tabLayout.addTab(bookTab);
+        tabLayout.addTab(tabLayout.newTab().setText("Calendar").setIcon(R.drawable.calendar_white));
+        tabLayout.addTab(tabLayout.newTab().setText("History").setIcon(R.drawable.clock_white));
+        tabLayout.addTab(tabLayout.newTab().setText("Settings").setIcon(R.drawable.settings_white));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(1);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SlideScreenActivity.this, SampleActivity.class));
-////                RelativeLayout helpLayout = new RelativeLayout(SlideScreenActivity.this);
-////
-////                helpLayout.setBackgroundResource(R.color.help_dark_colour);
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab == newTab){
+                    helpIcon.setImageResource(R.drawable.add_light_no_transparency_center);
+                    helpIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            newEvent();
+                        }
+                    });
+                }else{
+                    helpIcon.setImageResource(R.drawable.help_icon);
+                }
 //
+                viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == 0) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.new_event_icon_pressed);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.book_white);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.calendar_white);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.clock_white);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.settings_white);
+                } else if (tab.getPosition() == 1) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.new_white);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.home_icon_pressed);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.calendar_white);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.clock_white);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.settings_white);
+                } else if (tab.getPosition() == 2) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.new_white);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.book_white);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.calendar_icon_pressed);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.clock_white);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.settings_white);
+
+                } else if (tab.getPosition() == 3) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.new_white);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.book_white);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.calendar_white);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.history_icon_pressed);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.settings_white);
+                } else if (tab.getPosition() == 4) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.new_white);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.book_white);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.calendar_white);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.clock_white);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.settings_icon_pressed);
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+        bookTab.select();
+//        mPager.setCurrentItem(0);
+//
+//        ImageView helpIcon = (ImageView) findViewById(R.id.helpIcon);
+//        helpIcon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(SlideScreenActivity.this, SampleActivity.class));
+//////                RelativeLayout helpLayout = new RelativeLayout(SlideScreenActivity.this);
+//////
+//////                helpLayout.setBackgroundResource(R.color.help_dark_colour);
+////
+////                final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
+////                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+////                View layout = inflater.inflate(R.layout.help_button_explanation, (ViewGroup)findViewById(R.id.helpRootLayout));
+////                yourDialog.setContentView(layout);
+////                yourDialog.show();
+//            }
+//        });
+//
+//        ImageView homeIcon = (ImageView) findViewById(R.id.homeIcon);
+//        homeIcon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPager.setCurrentItem(0);
+//                homeFragment();
+//            }
+//        });
+//        ImageView calendarIcon = (ImageView) findViewById(R.id.calendarIcon);
+//        calendarIcon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPager.setCurrentItem(1);
+//                calendarFragment();
+//            }
+//        });
+//        ImageView historyIcon = (ImageView) findViewById(R.id.historyIcon);
+//        historyIcon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPager.setCurrentItem(2);
+//                historyFragment();
+//            }
+//        });
+//
+//        Button newIcon = (Button) findViewById(R.id.newEventIcon);
+//        newIcon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
 //                final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
 //                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-//                View layout = inflater.inflate(R.layout.help_button_explanation, (ViewGroup)findViewById(R.id.helpRootLayout));
+//                View layout = inflater.inflate(R.layout.new_event, (ViewGroup)findViewById(R.id.newEventMainLayout));
+//                yourDialog.setTitle("Add New Event");
 //                yourDialog.setContentView(layout);
+//                newEvent(yourDialog);
 //                yourDialog.show();
-            }
-        });
+//            }
+//        });
+//
+//        Button settingsIcon = (Button) findViewById(R.id.settingsIcon);
+//        settingsIcon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
+//                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//                View layout = inflater.inflate(R.layout.activity_settings, (ViewGroup)findViewById(R.id.settingsMainLayout));
+//                yourDialog.setTitle("Settings");
+//                yourDialog.setContentView(layout);
+//                setupSettingsListView(yourDialog);
+//                yourDialog.show();
+//            }
+//        });
+    }
 
-        ImageView homeIcon = (ImageView) findViewById(R.id.homeIcon);
-        homeIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPager.setCurrentItem(0);
-                homeFragment();
-            }
-        });
-        ImageView calendarIcon = (ImageView) findViewById(R.id.calendarIcon);
-        calendarIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPager.setCurrentItem(1);
-                calendarFragment();
-            }
-        });
-        ImageView historyIcon = (ImageView) findViewById(R.id.historyIcon);
-        historyIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPager.setCurrentItem(2);
-                historyFragment();
-            }
-        });
+    public class PagerAdapter extends FragmentStatePagerAdapter {
+        int mNumOfTabs;
 
-        Button newIcon = (Button) findViewById(R.id.newEventIcon);
-        newIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
-                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                View layout = inflater.inflate(R.layout.new_event, (ViewGroup)findViewById(R.id.newEventMainLayout));
-                yourDialog.setTitle("Add New Event");
-                yourDialog.setContentView(layout);
-                newEvent(yourDialog);
-                yourDialog.show();
-            }
-        });
+        public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+            super(fm);
+            this.mNumOfTabs = NumOfTabs;
+        }
 
-        Button settingsIcon = (Button) findViewById(R.id.settingsIcon);
-        settingsIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
-                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                View layout = inflater.inflate(R.layout.activity_settings, (ViewGroup)findViewById(R.id.settingsMainLayout));
-                yourDialog.setTitle("Settings");
-                yourDialog.setContentView(layout);
-                setupSettingsListView(yourDialog);
-                yourDialog.show();
+        @Override
+        public Fragment getItem(int position) {
+
+            switch (position) {
+                case 0:
+
+                    return new EventFragment(SlideScreenActivity.this, SlideScreenActivity.this);
+                case 1:
+                    TodaysEventsFragment tab1 = new TodaysEventsFragment(SlideScreenActivity.this, SlideScreenActivity.this);
+                    return tab1;
+                case 2:
+                    CalendarFragment tab2 = new CalendarFragment(SlideScreenActivity.this, SlideScreenActivity.this);
+                    return tab2;
+                case 3:
+                    HistoryFragment tab3 = new HistoryFragment(SlideScreenActivity.this, SlideScreenActivity.this);
+                    return tab3;
+                case 4:
+                    //TabFragment3 tab5 = new TabFragment3();
+                    return new SettingsFragment();
+                default:
+                    return null;
             }
-        });
+        }
+
+        @Override
+        public int getCount() {
+            return mNumOfTabs;
+        }
     }
 
     @Override
@@ -244,7 +364,13 @@ public class SlideScreenActivity extends FragmentActivity {
             });
         }
 
-    private void newEvent(final Dialog d){
+    private void newEvent(){
+        final Dialog d = new Dialog(SlideScreenActivity.this);
+                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                View layout = inflater.inflate(R.layout.new_event, (ViewGroup)findViewById(R.id.newEventMainLayout));
+                d.setTitle("Add New Event");
+                d.setContentView(layout);
+
         setupCheckBoxListeners(d);
         final SeekBar timeSeekBar = (SeekBar) d.findViewById(R.id.seekBar);
         timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -320,6 +446,7 @@ public class SlideScreenActivity extends FragmentActivity {
                 d.dismiss();
             }
         });
+        d.show();
 
     }
 
@@ -523,53 +650,53 @@ public class SlideScreenActivity extends FragmentActivity {
         return frequency;
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
+//    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+//        public ScreenSlidePagerAdapter(FragmentManager fm) {
+//            super(fm);
+//        }
+//
+//        @Override
+//        public Fragment getItem(int position) {
+//
+//            Toast.makeText(SlideScreenActivity.this, "Position: " + position, Toast.LENGTH_LONG).show();
+//            if(position == 0){
+//                homeFragment();
+//                todaysEventsFragment = new TodaysEventsFragment(SlideScreenActivity.this, SlideScreenActivity.this);
+//                return todaysEventsFragment;
+//            }else if (position == 1){
+//                calendarFragment();
+//                return new CalendarFragment(SlideScreenActivity.this, SlideScreenActivity.this);
+//            }else{
+//                historyFragment();
+//                return new HistoryFragment(SlideScreenActivity.this, SlideScreenActivity.this);
+//            }
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return NUM_PAGES;
+//        }
+//
+//
+//    }
 
-        @Override
-        public Fragment getItem(int position) {
-
-            Toast.makeText(SlideScreenActivity.this, "Position: " + position, Toast.LENGTH_LONG).show();
-            if(position == 0){
-                homeFragment();
-                todaysEventsFragment = new TodaysEventsFragment(SlideScreenActivity.this, SlideScreenActivity.this);
-                return todaysEventsFragment;
-            }else if (position == 1){
-                calendarFragment();
-                return new CalendarFragment(SlideScreenActivity.this, SlideScreenActivity.this);
-            }else{
-                historyFragment();
-                return new HistoryFragment(SlideScreenActivity.this, SlideScreenActivity.this);
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return NUM_PAGES;
-        }
-
-
-    }
-
-    public void homeFragment(){
-        ((ImageView) findViewById(R.id.homeIcon)).setImageResource(R.drawable.home_icon_pressed);
-        ((ImageView) findViewById(R.id.calendarIcon)).setImageResource(R.drawable.calendar_icon);
-        ((ImageView) findViewById(R.id.historyIcon)).setImageResource(R.drawable.history_icon);
-    }
-
-    public void calendarFragment(){
-        ((ImageView) findViewById(R.id.homeIcon)).setImageResource(R.drawable.home_icon);
-        ((ImageView) findViewById(R.id.historyIcon)).setImageResource(R.drawable.history_icon);
-        ((ImageView) findViewById(R.id.calendarIcon)).setImageResource(R.drawable.calendar_icon_pressed);
-    }
-
-    public void historyFragment(){
-        ((ImageView) findViewById(R.id.homeIcon)).setImageResource(R.drawable.home_icon);
-        ((ImageView) findViewById(R.id.calendarIcon)).setImageResource(R.drawable.calendar_icon);
-        ((ImageView) findViewById(R.id.historyIcon)).setImageResource(R.drawable.history_icon_pressed);
-    }
+//    public void homeFragment(){
+//        ((ImageView) findViewById(R.id.homeIcon)).setImageResource(R.drawable.home_icon_pressed);
+//        ((ImageView) findViewById(R.id.calendarIcon)).setImageResource(R.drawable.calendar_icon);
+//        ((ImageView) findViewById(R.id.historyIcon)).setImageResource(R.drawable.history_icon);
+//    }
+//
+//    public void calendarFragment(){
+//        ((ImageView) findViewById(R.id.homeIcon)).setImageResource(R.drawable.home_icon);
+//        ((ImageView) findViewById(R.id.historyIcon)).setImageResource(R.drawable.history_icon);
+//        ((ImageView) findViewById(R.id.calendarIcon)).setImageResource(R.drawable.calendar_icon_pressed);
+//    }
+//
+//    public void historyFragment(){
+//        ((ImageView) findViewById(R.id.homeIcon)).setImageResource(R.drawable.home_icon);
+//        ((ImageView) findViewById(R.id.calendarIcon)).setImageResource(R.drawable.calendar_icon);
+//        ((ImageView) findViewById(R.id.historyIcon)).setImageResource(R.drawable.history_icon_pressed);
+//    }
 
 }
 

@@ -103,7 +103,7 @@ public class TodaysEventsFragment extends Fragment {
 
     public void setupTodaysEvents(){
         DataBaseOperations dbo = new DataBaseOperations(ctx);
-        TextView noEvents = (TextView) viewById(R.id.todaysEventsFragmentNoEventsView);
+        TextView noEvents = new TextView(getContext());//(TextView) viewById(R.id.todaysEventsFragmentNoEventsView);
         setToday();
         Cursor cr = dbo.getInformation(dbo, dayOfTheWeek, dateOfTheMonth);
         //LinearLayout ll = (LinearLayout) viewById(R.id.todaysEventsFragmentLinearLayout);
