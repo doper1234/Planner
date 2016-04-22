@@ -22,10 +22,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="every monday tuesday thursday"
+            android:text="every monday tuesday wednesday thursday friday saturday sunday"
             android:id="@+id/databaseEventFrequencyTextView"
             android:layout_below="@+id/databaseEventTextView"
-            android:layout_alignParentEnd="true" />
+            android:layout_toStartOf="@+id/databaseEventEditImageView" />
 
         <TextView
             android:layout_width="wrap_content"

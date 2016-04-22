@@ -3,39 +3,30 @@ package com.example.chris.planner;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.os.Bundle;
-
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.ListPopupWindow;
-import android.transition.Slide;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
 
 
 public class SlideScreenActivity extends FragmentActivity {
@@ -55,7 +46,7 @@ public class SlideScreenActivity extends FragmentActivity {
         mPager.setAdapter(mPagerAdapter);
 
         final ImageView helpIcon = (ImageView) findViewById(R.id.helpIcon);
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.settingsTabLayout);
         final TabLayout.Tab bookTab = tabLayout.newTab().setText("Today").setIcon(R.drawable.home_icon_pressed);
         final TabLayout.Tab newTab = tabLayout.newTab().setText("Events").setIcon(R.drawable.new_white);
         tabLayout.addTab(newTab);
@@ -73,18 +64,6 @@ public class SlideScreenActivity extends FragmentActivity {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if(tab == newTab){
-                    helpIcon.setImageResource(R.drawable.add_light_no_transparency_center);
-                    helpIcon.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            newEvent();
-                        }
-                    });
-                }else{
-                    helpIcon.setImageResource(R.drawable.help_icon);
-                }
-//
                 viewPager.setCurrentItem(tab.getPosition());
                 if (tab.getPosition() == 0) {
                     tabLayout.getTabAt(0).setIcon(R.drawable.new_event_icon_pressed);
@@ -92,18 +71,41 @@ public class SlideScreenActivity extends FragmentActivity {
                     tabLayout.getTabAt(2).setIcon(R.drawable.calendar_white);
                     tabLayout.getTabAt(3).setIcon(R.drawable.clock_white);
                     tabLayout.getTabAt(4).setIcon(R.drawable.settings_white);
+                    helpIcon.setImageResource(R.drawable.add_light_no_transparency_center);
+                    helpIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            newEvent();
+                        }
+                    });
                 } else if (tab.getPosition() == 1) {
                     tabLayout.getTabAt(0).setIcon(R.drawable.new_white);
                     tabLayout.getTabAt(1).setIcon(R.drawable.home_icon_pressed);
                     tabLayout.getTabAt(2).setIcon(R.drawable.calendar_white);
                     tabLayout.getTabAt(3).setIcon(R.drawable.clock_white);
                     tabLayout.getTabAt(4).setIcon(R.drawable.settings_white);
+                    helpIcon.setImageResource(R.drawable.help_icon);
+                    helpIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
                 } else if (tab.getPosition() == 2) {
                     tabLayout.getTabAt(0).setIcon(R.drawable.new_white);
                     tabLayout.getTabAt(1).setIcon(R.drawable.book_white);
                     tabLayout.getTabAt(2).setIcon(R.drawable.calendar_icon_pressed);
                     tabLayout.getTabAt(3).setIcon(R.drawable.clock_white);
                     tabLayout.getTabAt(4).setIcon(R.drawable.settings_white);
+                    helpIcon.setImageResource(R.drawable.today_icon);
+                    helpIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
+                            Calendar selected = Calendar.getInstance();
+                            calendarView.setDate(selected.getTimeInMillis());
+                        }
+                    });
 
                 } else if (tab.getPosition() == 3) {
                     tabLayout.getTabAt(0).setIcon(R.drawable.new_white);
@@ -111,12 +113,26 @@ public class SlideScreenActivity extends FragmentActivity {
                     tabLayout.getTabAt(2).setIcon(R.drawable.calendar_white);
                     tabLayout.getTabAt(3).setIcon(R.drawable.history_icon_pressed);
                     tabLayout.getTabAt(4).setIcon(R.drawable.settings_white);
+                    helpIcon.setImageResource(R.drawable.add_light_no_transparency_center);
+                    helpIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            newEvent();
+                        }
+                    });
                 } else if (tab.getPosition() == 4) {
                     tabLayout.getTabAt(0).setIcon(R.drawable.new_white);
                     tabLayout.getTabAt(1).setIcon(R.drawable.book_white);
                     tabLayout.getTabAt(2).setIcon(R.drawable.calendar_white);
                     tabLayout.getTabAt(3).setIcon(R.drawable.clock_white);
                     tabLayout.getTabAt(4).setIcon(R.drawable.settings_icon_pressed);
+                    helpIcon.setImageResource(R.drawable.help_icon);
+                    helpIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
                 }
 
             }

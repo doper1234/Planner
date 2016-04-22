@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +61,12 @@ public class SettingsFragment extends Fragment {
     private void setupListView(){
         ListView listView = (ListView) findViewById(R.id.settingsOptionsListView);
         final String[] selectionOptions = {
-                "Change Colour",
+//                "Change Colour",
                 "Change Font",
-                "View All Events",
-                "Transfer Data Over Bluetooth",
-                "Change Colour Theme",
+//                "View All Events",
+                "Transfer Data",// Over Bluetooth",
+                "Wifi Sync",
+                "Change Colour",// Theme",
                 "Alarm Settings",
                 "Delete all events"
 //            getString(R.string.change_colour),
@@ -74,17 +79,106 @@ public class SettingsFragment extends Fragment {
         };
 
         Integer[] imageIDs = {
-                R.drawable.colour_test_icon,
-                R.drawable.font_test_icon,
-                R.drawable.view_all_test_icon,
-                R.drawable.bluetooth_test_icon,
-                R.drawable.colour_test_icon,
-                R.drawable.alarms_test_icon,
+               // R.drawable.colour_palette_blue,
+                R.drawable.font_blue,
+              //  R.drawable.view_all_blue,
+                R.drawable.bluetooth_blue,
+                R.drawable.sync_dark_blue,
+                R.drawable.colour_palette_blue,
+                R.drawable.alarm_blue,
                 R.drawable.delete_all_test_icon
         };
 
-        SettingsListAdapter adapter=new SettingsListAdapter(getActivity(), selectionOptions, imageIDs);
-        listView.setAdapter(adapter);
+        Integer[] tabImageIDs = {
+              //  R.drawable.colour_white,
+                R.drawable.font_dark_blue,
+                //R.drawable.view_all_white,
+                R.drawable.bluetooth_white,
+                R.drawable.sync_white,
+                R.drawable.colour_white,
+                R.drawable.alarm_white,
+                R.drawable.delete_white
+        };
+
+        final TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.settingsTabLayout);
+        for(int i =0; i < selectionOptions.length; i++){
+            tabLayout.addTab(tabLayout.newTab().setText(selectionOptions[i]).setIcon(tabImageIDs[i]));
+        }
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        final ViewPager pager = (ViewPager) findViewById(R.id.settingsPager);
+        final PagerAdapter pagerAdapter = new PagerAdapter
+                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
+        pager.setAdapter(pagerAdapter);
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                //viewPager.setCurrentItem(tab.getPosition());
+
+                pager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == 0) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.font_dark_blue);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.bluetooth_white);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.sync_white);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.colour_white);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.alarm_white);
+                    tabLayout.getTabAt(5).setIcon(R.drawable.delete_white);
+
+                } else if (tab.getPosition() == 1) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.font_white);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.bluetooth_dark_blue);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.sync_white);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.colour_white);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.alarm_white);
+                    tabLayout.getTabAt(5).setIcon(R.drawable.delete_white);
+
+                } else if (tab.getPosition() == 2) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.font_white);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.bluetooth_white);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.sync_dark_blue);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.colour_white);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.alarm_white);
+                    tabLayout.getTabAt(5).setIcon(R.drawable.delete_white);
+
+                }  else if (tab.getPosition() == 3) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.font_white);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.bluetooth_white);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.sync_white);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.colour_palette_dark_blue);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.alarm_white);
+                    tabLayout.getTabAt(5).setIcon(R.drawable.delete_white);
+
+                } else if (tab.getPosition() == 4) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.font_white);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.bluetooth_white);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.sync_white);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.colour_white);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.alarm_dark_blue);
+                    tabLayout.getTabAt(5).setIcon(R.drawable.delete_white);
+
+                } else if (tab.getPosition() == 5) {
+                    tabLayout.getTabAt(0).setIcon(R.drawable.font_white);
+                    tabLayout.getTabAt(1).setIcon(R.drawable.bluetooth_white);
+                    tabLayout.getTabAt(2).setIcon(R.drawable.sync_white);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.colour_white);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.alarm_white);
+                    tabLayout.getTabAt(5).setIcon(R.drawable.delete_all_test_icon);
+
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        SettingsListAdapter settingsListAdapter=new SettingsListAdapter(getActivity(), selectionOptions, imageIDs);
+        listView.setAdapter(settingsListAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -141,5 +235,43 @@ public class SettingsFragment extends Fragment {
                 //Toast.makeText(SettingsActivity.this, selectionOptions[position], Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public class PagerAdapter extends FragmentStatePagerAdapter {
+        int mNumOfTabs;
+
+        public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+            super(fm);
+            this.mNumOfTabs = NumOfTabs;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            switch (position) {
+                case 0:
+
+                    return new FontFragment();
+                case 1:
+
+                    return new BluetoothFragment();
+                case 2:
+                    return new SyncWithServerFragment();
+                case 3:
+                    return new ChangeColourFragment();
+                case 4:
+                    return new AlarmFragment();
+                case 5:
+                    //TabFragment3 tab5 = new TabFragment3();
+                    return new DeleteFragment();
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return mNumOfTabs;
+        }
     }
 }

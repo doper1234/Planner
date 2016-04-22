@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.chris.planner.TableData.*;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Chris on 09/03/2016.
@@ -153,6 +154,10 @@ public class DataBaseOperations extends SQLiteOpenHelper {
         String[] columns = {TableInfo.EVENT_NAME, TableInfo.EVENT_FREQUENCY, TableInfo.EVENT_DURATION, TableInfo.INITIAL_EVENT_DURATION,TableInfo.EVENT_FINISHED};
         String args =TableInfo.EVENT_FREQUENCY + " LIKE '%"+day+"%' OR " + TableInfo.EVENT_FREQUENCY + " LIKE '%"+date+"%'";
         return sq.query(TableInfo.TABLE_NAME, columns, args, null, null, null, null);
+    }
+
+    public void syncEvents(List<String> eventsToSync){
+
     }
 
     public void updateTime(DataBaseOperations dbo, String eventTitle, String duration){

@@ -111,11 +111,6 @@ public class CalendarFragment extends Fragment {
 //            t.setText("Week day: " + dayOfWeek + " date: " + dayOfMonth + " month: " + month + " year:" + year);
 //            ll.addView(t);
             DataBaseOperations dbo = new DataBaseOperations(ctx);
-            dbo.getDayTableInformation(dbo, getWeekDayString(dayOfWeek), dayOfMonth, getMonth(month), year);
-
-            //ll.removeAllViews();
-            TableData.TableInfo.EDITING = true;
-            String weekDay = getWeekDayString(dayOfWeek);
             Cursor cr = dbo.getDayTableInformation(dbo, getWeekDayString(dayOfWeek), dayOfMonth, getMonth(month), year);
             if(cr.moveToFirst()){
                 do{
@@ -126,7 +121,6 @@ public class CalendarFragment extends Fragment {
                     eventFinished = cr.getString(3);
                     TextView eventInfoTextView = new TextView(ctx);
                     if(eventFinished.equalsIgnoreCase("yes")){
-                        //eventInfoTextView.setText(eventName + " was finished!");
                         eventTitles.add(eventName + " was finished!");
                     }else if(!eventFinished.equalsIgnoreCase("yes")  && eventDuration > 0){
                         eventInfoTextView.setText(eventName + " wasn't finished. There were " + eventDuration + " minutes left.");
@@ -136,7 +130,6 @@ public class CalendarFragment extends Fragment {
                     }else{
                         eventTitles.add(eventName + " wasn't finished.");
                     }
-                    //ll.addView(eventInfoTextView);
                 }while(cr.moveToNext());
             }
         }catch(Exception e){
@@ -154,9 +147,7 @@ public class CalendarFragment extends Fragment {
 //        display.setText(R.string.planned_on_this_day);
         //LinearLayout ll = (LinearLayout) findViewById(R.id.scrollLinearLayout);
        // ll.removeAllViews();
-        TableData.TableInfo.EDITING = true;
-        LinearLayout.LayoutParams llp = new ActionMenuView.LayoutParams(0,0);
-
+        List<String> eventTitles = new ArrayList<>();
         String weekDay = getWeekDayString(dayOfWeek);
         Cursor cr = dbo.getInformation(dbo, weekDay, Integer.toString(dayOfMonth));
         if(cr.moveToFirst()){
@@ -169,12 +160,17 @@ public class CalendarFragment extends Fragment {
                 eventName = cr.getString(0);
                 eventFrequency = cr.getString(1);
                 eventDuration = Integer.parseInt(cr.getString(2));
+                eventTitles.add(eventName);
                 //new Event(ctx, eventName, eventFrequency, eventDuration, ll);
 
                 //}
 
             }while(cr.moveToNext());
+        }else{
+            eventTitles.add("You won't have anything to do on this day.");
         }
+        ListView listView = (ListView) findViewById(R.id.calendarListView);
+        listView.setAdapter(new ArrayAdapter<>(ctx, R.layout.event_child_layout, R.id.eventTitleTextView, eventTitles));
 
     }
 

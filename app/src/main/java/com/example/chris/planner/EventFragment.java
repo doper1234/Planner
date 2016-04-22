@@ -70,27 +70,29 @@ public class EventFragment extends Fragment {
         Cursor cr = dbo.getInformation(dbo);
         ListView listView = (ListView) findViewById(R.id.eventListView);
         List<String> events = new ArrayList<String>();
+        List<String> frequencies = new ArrayList<>();
+        List<String> durations = new ArrayList<>();
         if(cr.moveToFirst()){
             do{
                 String eventName, eventFrequency, eventFinished;
-                int eventDuration;
+                String eventDuration;
                 eventName = cr.getString(0);
                 eventFrequency = cr.getString(1);
-                eventDuration = Integer.parseInt(cr.getString(2));
-                if(eventDuration > 0){
-                    events.add(eventName);
+                eventDuration = (cr.getString(2));
+
+                events.add(eventName);
+                frequencies.add(eventFrequency);
+                durations.add(eventDuration);
                     //events.add(eventName + " to do every " + eventFrequency + " for " + eventDuration + " minutes");
-                }else{
-                    events.add(eventName);
-                    //events.add(eventName + " to do every " + eventFrequency);
-                }
+
 
             } while (cr.moveToNext());
         }else{
-            events.add("You have no events. Why don't you add one?");
+            events.add("You have no events. Why don't you add some?");
         }
 
-        listView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.database_event_layout, R.id.databaseEventTextView, events));
+        listView.setAdapter(new DatabaseEventListAdapter(getActivity(), events, frequencies, durations));
+        //listView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.database_event_layout, R.id.databaseEventTextView, events));
     }
 
     private void setupSearch(){
@@ -105,19 +107,26 @@ public class EventFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 ListView listView = (ListView) findViewById(R.id.eventListView);
-                List<String> events = new ArrayList<String>();
+                List<String> events = new ArrayList<>();
+                List<String> frequencies = new ArrayList<>();
+                List<String> durations = new ArrayList<>();
                 if (!newText.equalsIgnoreCase("")) {
                     DataBaseOperations dbo = new DataBaseOperations(getContext());
                     Cursor dataFound = dbo.getInformation(dbo, newText);
                     if (dataFound.moveToFirst()) {
                         do {
-                            String title = dataFound.getString(0);
-                            //TextView titleView = new TextView(getContext());
-                            events.add(title);
-                            //linearLayout.addView(titleView);
+
+                            String eventName, eventFrequency, eventDuration;
+                            eventName = dataFound.getString(0);
+                            eventFrequency = dataFound.getString(1);
+                            eventDuration = (dataFound.getString(2));
+
+                            events.add(eventName);
+                            frequencies.add(eventFrequency);
+                            durations.add(eventDuration);
                         } while (dataFound.moveToNext());
                     }
-                    listView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.database_event_layout, R.id.databaseEventTextView, events));
+                    listView.setAdapter(new DatabaseEventListAdapter(getActivity(), events, frequencies, durations));
                 }else{
                     loadEvents();
                 }
