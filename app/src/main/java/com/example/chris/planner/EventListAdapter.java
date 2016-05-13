@@ -39,6 +39,7 @@ public class EventListAdapter extends ArrayAdapter<String> {
     private Context ctx;
     private List<String> timeLeft;
     private TodaysEventsFragment todayFragment;
+    private EventFragment eventFragment;
     Typeface font;
     String[] options = {
             "subtract time",
@@ -49,10 +50,10 @@ public class EventListAdapter extends ArrayAdapter<String> {
             "delete"
     };
 
-    public EventListAdapter(TodaysEventsFragment fragment, Activity context, List<String> eventNames, List<String> timeLeft) {
+    public EventListAdapter(TodaysEventsFragment fragment,  EventFragment ef, Activity context, List<String> eventNames, List<String> timeLeft) {
         super(context, R.layout.event_parent_layout, eventNames);
 
-
+        eventFragment = ef;
         todayFragment = fragment;
         this.context = this.activity = context;
         ctx = context;
@@ -87,7 +88,7 @@ public class EventListAdapter extends ArrayAdapter<String> {
         finishedImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Toast.makeText(ctx, timeLeft.get(position) + " pos", Toast.LENGTH_LONG).show();
+                //Toast.makeText(ctx, timeLeft.get(position) + " pos", Toast.LENGTH_LONG).show();
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.check_dark_blue);
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -151,7 +152,14 @@ public class EventListAdapter extends ArrayAdapter<String> {
                                 showSubtractPopup(title, duration);
                                 listPopupWindow.dismiss();
                                 break;
-
+                            case 1:
+                                moveEvent(title, true);
+                                listPopupWindow.dismiss();
+                                break;
+                            case 2:
+                                moveEvent(title, false);
+                                listPopupWindow.dismiss();
+                                break;
                             case 3:
                                 showMoveEventToTomorrow(title);
                                 listPopupWindow.dismiss();
@@ -170,10 +178,17 @@ public class EventListAdapter extends ArrayAdapter<String> {
                     } else {
                         switch (position) {
                             case 0:
+                                moveEvent(title, true);
+                                listPopupWindow.dismiss();
+                                break;
+                            case 1:
+                                moveEvent(title, false);
+                                listPopupWindow.dismiss();
+                                break;
+                            case 2:
                                 showMoveEventToTomorrow(title);
                                 listPopupWindow.dismiss();
                                 break;
-
                             case 3:
                                 showEventEdit(title);
                                 listPopupWindow.dismiss();
@@ -280,6 +295,12 @@ public class EventListAdapter extends ArrayAdapter<String> {
 
         }
 
+    private void moveEvent(String title, boolean moveUp){
+        DataBaseOperations dbo = new DataBaseOperations(getContext());
+        dbo.updateOrder(dbo, title, moveUp);
+        todayFragment.setupTodaysEvents();
+    }
+
         private void showEventEdit(String title){
             final Dialog yourDialog = new Dialog(activity);
             LayoutInflater inflater = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
@@ -356,8 +377,8 @@ public class EventListAdapter extends ArrayAdapter<String> {
                 }
             });
             Button addToPlanner = (Button) d.findViewById(R.id.addToEventsButton);
-            addToPlanner.setText("save");
             addToPlanner.setOnClickListener(new View.OnClickListener() {
+                String oldTitle = ((TextView) d.findViewById(R.id.eventTitle)).getText().toString();
                 @Override
                 public void onClick(View v) {
                     TextView titleView = (TextView) d.findViewById(R.id.eventTitle);
@@ -371,15 +392,26 @@ public class EventListAdapter extends ArrayAdapter<String> {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     final int duration = timeSeekBar.getProgress();
                                     if (!getFrequency(d).equalsIgnoreCase("")) {
-                                        saveEvent(newTitle, getFrequency(d), duration);
-                                        Toast.makeText(ctx, "yes", Toast.LENGTH_LONG);
+                                        DataBaseOperations dbo = new DataBaseOperations(ctx);
+                                        if (!dbo.doesEventNameAlreadyExist(dbo, newTitle)) {
+                                            saveEvent(dbo, oldTitle, newTitle, getFrequency(d), duration);
+                                            d.dismiss();
+                                            todayFragment.setupTodaysEvents();
+                                            eventFragment.loadEvents();
+                                        } else {
+                                            new AlertDialog.Builder(ctx)
+                                                    .setTitle("Event already exists")
+                                                    .setMessage(newTitle + " is already in the event database. Choose a different name.")
+                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                    .setPositiveButton(android.R.string.yes, null)
+                                                    .show();
+                                        }
                                     } else {
-                                        Toast.makeText(ctx,"nope", Toast.LENGTH_LONG);
                                         new AlertDialog.Builder(ctx)
                                                 .setTitle("Invalid input")
                                                 .setMessage("You must select a day or date first")
                                                 .setIcon(android.R.drawable.ic_dialog_alert)
-                                                .setPositiveButton(android.R.string.yes, null);
+                                                .setPositiveButton(android.R.string.yes, null).show();
                                     }
 
                                 }
@@ -657,10 +689,9 @@ public class EventListAdapter extends ArrayAdapter<String> {
         return frequency;
     }
 
-    private void saveEvent(String title, String frequency, int duration){
-        DataBaseOperations dbo = new DataBaseOperations(ctx);
-        dbo.deleteEvent(dbo, title, frequency, Integer.toString(duration));
-        dbo.putInformation(dbo, title, frequency, duration);
+    private void saveEvent(DataBaseOperations dbo, String oldTitle, String newTitle, String frequency, int duration){
+        dbo.deleteEvent(dbo, oldTitle, frequency, Integer.toString(duration));
+        dbo.putInformation(dbo, newTitle, frequency, duration);
 
     }
 
@@ -677,6 +708,8 @@ public class EventListAdapter extends ArrayAdapter<String> {
         }
 
         private void deleteEvent(String title){
+
+            todayFragment.deleteEvent(title);
 
         }
     }

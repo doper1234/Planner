@@ -16,17 +16,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Reminder off"
-        android:id="@+id/switch1"
+        android:id="@+id/alarmSettingsSwitch"
         android:layout_below="@+id/textView5"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:checked="true" />
 
     <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timePicker"
-        android:layout_below="@+id/switch1"
+        android:layout_below="@+id/alarmSettingsSwitch"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -47,5 +49,13 @@
         android:background="@drawable/alarms_test_icon"
         android:layout_below="@+id/timePicker"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Now"
+        android:id="@+id/alarmNowButton"
+        android:layout_below="@+id/timePicker"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

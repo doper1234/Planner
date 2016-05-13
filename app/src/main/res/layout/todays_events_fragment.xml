@@ -4,6 +4,18 @@
     android:paddingTop="1dp"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Congratulations! You&apos;ve finished all events for today!"
+        android:id="@+id/allEventsFinishedView"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:paddingTop="100dp"
+        android:background="@color/scrollingBackground" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

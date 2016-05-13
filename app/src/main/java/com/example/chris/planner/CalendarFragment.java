@@ -51,7 +51,7 @@ public class CalendarFragment extends Fragment {
     }
 
     public void createCalendarScreen(){
-        final CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
+        final CalendarView calendarView = (CalendarView) findViewById(R.id.todayCalendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {

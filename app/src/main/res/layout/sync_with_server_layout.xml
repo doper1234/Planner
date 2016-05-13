@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     android:background="@color/scrollingBackground">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Not logged in"
+        android:id="@+id/loggedInAsTextView" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
@@ -56,21 +63,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/confirmAccountPasswordLinearLayout"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Confirm Password"
-            android:id="@+id/confirmAccountPasswordTextView" />
+            android:id="@+id/confirmAccountPasswordTextView"
+            android:visibility="visible" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/confirmAccountPasswordEditText" />
+            android:id="@+id/confirmAccountPasswordEditText"
+            android:visibility="visible" />
     </LinearLayout>
 
     <Button
@@ -87,7 +97,8 @@
         android:text="Create Account"
         android:id="@+id/newAccountButton"
         android:layout_gravity="center_horizontal"
-        android:backgroundTint="@color/light_blue" />
+        android:backgroundTint="@color/light_blue"
+        android:enabled="false" />
 
     <Button
         android:layout_width="wrap_content"
@@ -97,5 +108,18 @@
         android:layout_gravity="center_horizontal"
         android:backgroundTint="@color/light_blue"
         android:enabled="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Create new account"
+        android:id="@+id/createNewAccountTextView" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/syncEventsListView"
+        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

@@ -9,6 +9,14 @@
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="colorAccent">#B89E25</item>
     </style>
+    <style name="Theme.Custom" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:calendarViewStyle">@style/Widget.CalendarView.Custom</item>
+    </style>
+
+    <style name="Widget.CalendarView.Custom" parent="android:Widget.CalendarView">
+        <item name="android:focusedMonthDateColor">@color/dark_blue</item>
+        <item name="android:weekNumberColor">@color/light_blue</item>
+    </style>
     <style name="SettingsTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!--   your app branding color for the app bar -->
         <item name="colorPrimary">#3F51B5</item>

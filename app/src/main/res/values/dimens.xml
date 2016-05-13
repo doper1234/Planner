@@ -7,4 +7,5 @@
     <dimen name="event_height">45dp</dimen>
     <dimen name="event_child_height">25dp</dimen>
     <dimen name="icon_size">50dp</dimen>
+    <dimen name="gif_size">80dp</dimen>
 </resources>

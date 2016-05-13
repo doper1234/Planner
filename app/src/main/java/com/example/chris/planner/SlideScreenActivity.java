@@ -1,46 +1,33 @@
 package com.example.chris.planner;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.app.*;
+import android.content.*;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.*;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 
 import java.util.Calendar;
 
 
 public class SlideScreenActivity extends FragmentActivity {
 
-    private static final int NUM_PAGES = 3;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
     private TodaysEventsFragment todaysEventsFragment;
+    private EventFragment eventFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_screen);
         // Instantiate a ViewPager and a PagerAdapter.
+        setupAnimation();
+        setupTimers();
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager(),5);
         mPager.setAdapter(mPagerAdapter);
@@ -101,9 +88,10 @@ public class SlideScreenActivity extends FragmentActivity {
                     helpIcon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
+                            CalendarView calendarView = (CalendarView) findViewById(R.id.todayCalendarView);
                             Calendar selected = Calendar.getInstance();
                             calendarView.setDate(selected.getTimeInMillis());
+
                         }
                     });
 
@@ -148,79 +136,7 @@ public class SlideScreenActivity extends FragmentActivity {
             }
         });
 
-
         bookTab.select();
-//        mPager.setCurrentItem(0);
-//
-//        ImageView helpIcon = (ImageView) findViewById(R.id.helpIcon);
-//        helpIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(SlideScreenActivity.this, SampleActivity.class));
-//////                RelativeLayout helpLayout = new RelativeLayout(SlideScreenActivity.this);
-//////
-//////                helpLayout.setBackgroundResource(R.color.help_dark_colour);
-////
-////                final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
-////                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-////                View layout = inflater.inflate(R.layout.help_button_explanation, (ViewGroup)findViewById(R.id.helpRootLayout));
-////                yourDialog.setContentView(layout);
-////                yourDialog.show();
-//            }
-//        });
-//
-//        ImageView homeIcon = (ImageView) findViewById(R.id.homeIcon);
-//        homeIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPager.setCurrentItem(0);
-//                homeFragment();
-//            }
-//        });
-//        ImageView calendarIcon = (ImageView) findViewById(R.id.calendarIcon);
-//        calendarIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPager.setCurrentItem(1);
-//                calendarFragment();
-//            }
-//        });
-//        ImageView historyIcon = (ImageView) findViewById(R.id.historyIcon);
-//        historyIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPager.setCurrentItem(2);
-//                historyFragment();
-//            }
-//        });
-//
-//        Button newIcon = (Button) findViewById(R.id.newEventIcon);
-//        newIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
-//                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-//                View layout = inflater.inflate(R.layout.new_event, (ViewGroup)findViewById(R.id.newEventMainLayout));
-//                yourDialog.setTitle("Add New Event");
-//                yourDialog.setContentView(layout);
-//                newEvent(yourDialog);
-//                yourDialog.show();
-//            }
-//        });
-//
-//        Button settingsIcon = (Button) findViewById(R.id.settingsIcon);
-//        settingsIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
-//                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-//                View layout = inflater.inflate(R.layout.activity_settings, (ViewGroup)findViewById(R.id.settingsMainLayout));
-//                yourDialog.setTitle("Settings");
-//                yourDialog.setContentView(layout);
-//                setupSettingsListView(yourDialog);
-//                yourDialog.show();
-//            }
-//        });
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
@@ -236,19 +152,16 @@ public class SlideScreenActivity extends FragmentActivity {
 
             switch (position) {
                 case 0:
-
-                    return new EventFragment(SlideScreenActivity.this, SlideScreenActivity.this);
+                    eventFragment = new EventFragment(SlideScreenActivity.this, SlideScreenActivity.this, todaysEventsFragment);
+                    return eventFragment;
                 case 1:
-                    TodaysEventsFragment tab1 = new TodaysEventsFragment(SlideScreenActivity.this, SlideScreenActivity.this);
-                    return tab1;
+                    todaysEventsFragment= new TodaysEventsFragment(SlideScreenActivity.this, SlideScreenActivity.this, eventFragment);
+                    return todaysEventsFragment;
                 case 2:
-                    CalendarFragment tab2 = new CalendarFragment(SlideScreenActivity.this, SlideScreenActivity.this);
-                    return tab2;
+                    return new CalendarFragment(SlideScreenActivity.this, SlideScreenActivity.this);
                 case 3:
-                    HistoryFragment tab3 = new HistoryFragment(SlideScreenActivity.this, SlideScreenActivity.this);
-                    return tab3;
+                    return new HistoryFragment(SlideScreenActivity.this, SlideScreenActivity.this);
                 case 4:
-                    //TabFragment3 tab5 = new TabFragment3();
                     return new SettingsFragment();
                 default:
                     return null;
@@ -271,6 +184,15 @@ public class SlideScreenActivity extends FragmentActivity {
             // Otherwise, select the previous step.
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
+    }
+
+    private void setupAnimation(){
+//        GifView gifView = (GifView)findViewById(R.id.gifview);
+//        gifView.setGifResource(R.drawable.fusion_spider, this);
+//        GifView samusGifView = (GifView)findViewById(R.id.samusGifview);
+//        samusGifView.setGifResource(R.drawable.samus, this);
+
+
     }
 
     private void setupSettingsListView(Dialog d){
@@ -310,7 +232,7 @@ public class SlideScreenActivity extends FragmentActivity {
                     if (optionSelected.equalsIgnoreCase("Change Colour")) {
                         final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
                         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                        View layout = inflater.inflate(R.layout.activity_change_colour, (ViewGroup)findViewById(R.id.colourMainLayout));
+                        View layout = inflater.inflate(R.layout.activity_change_colour, (ViewGroup) findViewById(R.id.colourMainLayout));
                         yourDialog.setTitle(optionSelected);
                         yourDialog.setContentView(layout);
                         yourDialog.show();
@@ -319,28 +241,28 @@ public class SlideScreenActivity extends FragmentActivity {
                     } else if (optionSelected.equalsIgnoreCase("View All Events")) {
                         final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
                         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                        View layout = inflater.inflate(R.layout.activity_display_all_events, (ViewGroup)findViewById(R.id.displayMainRelativeLayout));
+                        View layout = inflater.inflate(R.layout.activity_display_all_events, (ViewGroup) findViewById(R.id.displayMainRelativeLayout));
                         yourDialog.setTitle(optionSelected);
                         yourDialog.setContentView(layout);
                         yourDialog.show();
                     } else if (optionSelected.equalsIgnoreCase("Transfer Data Over Bluetooth")) {
                         final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
                         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                        View layout = inflater.inflate(R.layout.activity_bluetooth, (ViewGroup)findViewById(R.id.bluetoothMainLayout));
+                        View layout = inflater.inflate(R.layout.activity_bluetooth, (ViewGroup) findViewById(R.id.bluetoothMainLayout));
                         yourDialog.setTitle(optionSelected);
                         yourDialog.setContentView(layout);
                         yourDialog.show();
                     } else if (optionSelected.equalsIgnoreCase("Change Colour Theme")) {
                         final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
                         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                        View layout = inflater.inflate(R.layout.activity_change_colour_static, (ViewGroup)findViewById(R.id.changeColourThemeMainLayout));
+                        View layout = inflater.inflate(R.layout.activity_change_colour_static, (ViewGroup) findViewById(R.id.changeColourThemeMainLayout));
                         yourDialog.setTitle(optionSelected);
                         yourDialog.setContentView(layout);
                         yourDialog.show();
                     } else if (optionSelected.equalsIgnoreCase("Alarm Settings")) {
                         final Dialog yourDialog = new Dialog(SlideScreenActivity.this);
                         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                        View layout = inflater.inflate(R.layout.alarm_settings, (ViewGroup)findViewById(R.id.alarmSettingsRootLayout));
+                        View layout = inflater.inflate(R.layout.alarm_settings, (ViewGroup) findViewById(R.id.alarmSettingsRootLayout));
                         yourDialog.setTitle(optionSelected);
                         yourDialog.setContentView(layout);
                         yourDialog.show();
@@ -434,19 +356,24 @@ public class SlideScreenActivity extends FragmentActivity {
                                     DataBaseOperations dbo = new DataBaseOperations(SlideScreenActivity.this);
                                     if (!dbo.doesEventNameAlreadyExist(dbo, title)) {
                                         dbo.putInformation(dbo, title, getFrequency(d), duration);
-                                        Toast.makeText(SlideScreenActivity.this, "Event saved!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(SlideScreenActivity.this, title + " added!", Toast.LENGTH_LONG).show();
                                         d.dismiss();
                                         todaysEventsFragment.setupTodaysEvents();
+                                        eventFragment.loadEvents();
                                     } else {
                                         new AlertDialog.Builder(SlideScreenActivity.this)
                                                 .setTitle("Event already exists")
-                                                .setMessage(title + " is already in the event database.")
+                                                .setMessage(title + " is already in the event database. Choose a different name.")
                                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                                 .setPositiveButton(android.R.string.yes, null)
                                                 .show();
                                     }
-
-                                    //Toast.makeText(SlideScreenActivity.this, "Event added!", Toast.LENGTH_LONG).show();
+                                }else {
+                                    new AlertDialog.Builder(SlideScreenActivity.this)
+                                            .setTitle("Invalid input")
+                                            .setMessage("You must select a day or date first")
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .setPositiveButton(android.R.string.yes, null).show();
                                 }
 
                             }
@@ -571,27 +498,27 @@ public class SlideScreenActivity extends FragmentActivity {
         onceAMonthCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onceAMonthCheckbox.isChecked()){
+                if (onceAMonthCheckbox.isChecked()) {
                     specificDateEditText.setEnabled(true);
-                    if(mondayCheckBox.isChecked()){
+                    if (mondayCheckBox.isChecked()) {
                         mondayCheckBox.setChecked(false);
                     }
-                    if(tuesdayCheckBox.isChecked()){
+                    if (tuesdayCheckBox.isChecked()) {
                         tuesdayCheckBox.setChecked(false);
                     }
-                    if(wednesdayCheckBox.isChecked()){
+                    if (wednesdayCheckBox.isChecked()) {
                         wednesdayCheckBox.setChecked(false);
                     }
-                    if(thursdayCheckBox.isChecked()){
+                    if (thursdayCheckBox.isChecked()) {
                         thursdayCheckBox.setChecked(false);
                     }
-                    if(fridayCheckBox.isChecked()){
+                    if (fridayCheckBox.isChecked()) {
                         fridayCheckBox.setChecked(false);
                     }
-                    if(saturdayCheckBox.isChecked()){
+                    if (saturdayCheckBox.isChecked()) {
                         saturdayCheckBox.setChecked(false);
                     }
-                    if(sundayCheckBox.isChecked()){
+                    if (sundayCheckBox.isChecked()) {
                         sundayCheckBox.setChecked(false);
                     }
                 }
@@ -664,6 +591,53 @@ public class SlideScreenActivity extends FragmentActivity {
         }
 
         return frequency;
+    }
+
+    private void setupTimers(){
+        PendingIntent pendingIntent, pendingBootIntent;
+        Intent alarmIntent = new Intent(this, UnfinishedEventsReminderReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+
+        Intent bootIntent = new Intent(this, ResetFinishedEventsReceiver.class);
+        pendingBootIntent = PendingIntent.getBroadcast(this, 0, bootIntent, 0);
+        startAlarmManager(pendingIntent);
+        startResetAlarmManager(pendingBootIntent);
+    }
+
+    public void startAlarmManager(PendingIntent pendingIntent) {
+        Calendar calendar = Calendar.getInstance();
+        Calendar alarmCalender = calendar;
+        alarmCalender.set(Calendar.HOUR_OF_DAY, 19);
+        alarmCalender.set(Calendar.MINUTE, 30);
+        alarmCalender.set(Calendar.SECOND,0);
+
+//        long time24h = 24*60*60*1000;
+//        long timeAt09_00 = ...; // calculate from now...
+//        long timeAt11_30 = ...; // calculate from now...
+//
+//        alarmMgr1.setInexactRepeating(AlarmManager.RTC_WAKEUP, now ,        time24h, alarmIntent);
+//        alarmMgr2.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeAt09_00, time24h, alarmIntent);
+//        alarmMgr3.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeAt11_30, time24h, alarmIntent);
+
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 1000*60*60*24;
+
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, alarmCalender.getTimeInMillis(), interval, pendingIntent);
+        //Toast.makeText(this, "Alarm Set for 13:30", Toast.LENGTH_SHORT).show();
+    }
+
+    public void startResetAlarmManager(PendingIntent pendingBootIntent){
+        Calendar calendar = Calendar.getInstance();
+        Calendar alarmCalender = calendar;
+        alarmCalender.set(Calendar.HOUR_OF_DAY, 23);
+        alarmCalender.set(Calendar.MINUTE, 59);
+        alarmCalender.set(Calendar.SECOND,0);
+
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 1000 * 60 *60 * 24;
+
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, alarmCalender.getTimeInMillis(), interval, pendingBootIntent);
+        //Toast.makeText(this, "Boot Alarm Set", Toast.LENGTH_SHORT).show();
     }
 
 //    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

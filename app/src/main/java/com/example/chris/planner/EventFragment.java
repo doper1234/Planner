@@ -19,6 +19,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,10 +30,18 @@ public class EventFragment extends Fragment {
 
     private Context ctx;
     private Activity activity;
+    private DatabaseEventListAdapter dataBaseEventListAdapter;
+    private TodaysEventsFragment todaysEventsFragment;
 
-    public EventFragment(Context c, Activity a){
+    public EventFragment(){
+        ctx = getContext();
+    }
+
+    public EventFragment(Context c, Activity a, TodaysEventsFragment tef){
         ctx = c;
         activity = a;
+        todaysEventsFragment = tef;
+
     }
     ViewGroup rootView;
     @Override
@@ -42,26 +51,6 @@ public class EventFragment extends Fragment {
         loadEvents();
         setupSearch();
         return rootView;
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.todaysEventsFragment);
-//        TableData.TableInfo.EDITING = false;
-//        Intent alarmIntent = new Intent(Version2.this, UnfinishedEventsReminderReceiver.class);
-//        pendingIntent = PendingIntent.getBroadcast(Version2.this, 0, alarmIntent, 0);
-//
-//        Intent bootIntent = new Intent(Version2.this, ResetFinishedEventsReceiver.class);
-//        pendingBootIntent = PendingIntent.getBroadcast(Version2.this, 0, bootIntent, 0);
-//
-//        TextView text = (TextView) findViewById(R.id.textView2);
-//        Typeface font = Typeface.createFromAsset(getAssets(), "ComicSansMS.ttf");
-//        text.setTypeface(font);
-//        //startAlarmAtSpecificTime(12, 12, 1);
-//        startAlarmManager();
-//        startResetAlarmManager();
-//        createStartScreen();
-//        setTabHost();
-        //setTabHost();
-        //showBradley();
-        //setColours();
 
     }
 
@@ -74,7 +63,7 @@ public class EventFragment extends Fragment {
         List<String> durations = new ArrayList<>();
         if(cr.moveToFirst()){
             do{
-                String eventName, eventFrequency, eventFinished;
+                String eventName, eventFrequency;
                 String eventDuration;
                 eventName = cr.getString(0);
                 eventFrequency = cr.getString(1);
@@ -83,18 +72,15 @@ public class EventFragment extends Fragment {
                 events.add(eventName);
                 frequencies.add(eventFrequency);
                 durations.add(eventDuration);
-                    //events.add(eventName + " to do every " + eventFrequency + " for " + eventDuration + " minutes");
-
-
             } while (cr.moveToNext());
         }else{
             events.add("You have no events. Why don't you add some?");
         }
-
-        listView.setAdapter(new DatabaseEventListAdapter(getActivity(), events, frequencies, durations));
-        //listView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.database_event_layout, R.id.databaseEventTextView, events));
+    dataBaseEventListAdapter = new DatabaseEventListAdapter(getActivity(), this, todaysEventsFragment, events, frequencies, durations);
+    listView.setAdapter(dataBaseEventListAdapter);
     }
 
+    //
     private void setupSearch(){
         final SearchView searchView = (SearchView) findViewById(R.id.searchView);
         searchView.setEnabled(true);
@@ -126,50 +112,22 @@ public class EventFragment extends Fragment {
                             durations.add(eventDuration);
                         } while (dataFound.moveToNext());
                     }
-                    listView.setAdapter(new DatabaseEventListAdapter(getActivity(), events, frequencies, durations));
-                }else{
+                    listView.setAdapter(new DatabaseEventListAdapter(getActivity(), EventFragment.this, todaysEventsFragment, events, frequencies, durations));
+                } else {
                     loadEvents();
                 }
 
                 return true;
             }
         });
-//        searchView.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//                ListView listView = (ListView) viewID(R.id.historyListView);
-//                List<String> events = new ArrayList<String>();
-//                LinearLayout linearLayout = (LinearLayout) viewID(R.id.historyLinearLayout);
-//                linearLayout.removeAllViews();
-//                String searchFor = s.toString();
-//                if (!searchFor.equalsIgnoreCase("")) {
-//                    DataBaseOperations dbo = new DataBaseOperations(getContext());
-//                    Cursor dataFound = dbo.getInformation(dbo, searchFor);
-//                    if (dataFound.moveToFirst()) {
-//                        do {
-//                            String title = dataFound.getString(0);
-//                            //TextView titleView = new TextView(getContext());
-//                            events.add(title);
-//                            //linearLayout.addView(titleView);
-//                        } while (dataFound.moveToNext());
-//                    }
-//                }
-//                listView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.event_child_layout, R.id.eventTitleTextView, events));
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
     }
 
+    public void removeElement(String removeElement){
+        dataBaseEventListAdapter.remove(removeElement);
+
+    }
+
+    //helper method for use without rootView.
     private View findViewById(int id){
         return rootView.findViewById(id);
     }

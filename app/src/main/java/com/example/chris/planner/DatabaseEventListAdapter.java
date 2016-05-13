@@ -62,12 +62,16 @@ public class DatabaseEventListAdapter extends ArrayAdapter<String>{
     private List<String> frequencies;
         private Activity activity;
         private Context ctx;
+        private EventFragment eventFragment;
+        private TodaysEventsFragment todaysEventsFragment;
         Typeface font;
 
-        public DatabaseEventListAdapter(Activity context, List<String> eventNames, List<String> frequencies, List<String> timeLeft) {
+        public DatabaseEventListAdapter(Activity context, EventFragment ef, TodaysEventsFragment tef, List<String> eventNames, List<String> frequencies, List<String> timeLeft) {
             super(context, R.layout.database_event_layout, eventNames);
             this.context = this.activity = context;
             ctx = context;
+            eventFragment = ef;
+            todaysEventsFragment = tef;
             this.eventNames = eventNames;
             this.frequencies = frequencies;
             this.timeLeft = timeLeft;
@@ -78,19 +82,20 @@ public class DatabaseEventListAdapter extends ArrayAdapter<String>{
             LayoutInflater inflater=context.getLayoutInflater();
             View rowView=inflater.inflate(R.layout.database_event_layout, null,true);
 
-            TextView textView = (TextView) rowView.findViewById(R.id.databaseEventTextView);
-            textView.setTypeface(font, Typeface.BOLD);
-            textView.setText(eventNames.get(position));
-            TextView frequencyTextView = (TextView) rowView.findViewById(R.id.databaseEventFrequencyTextView);
-            frequencyTextView.setText("every " + frequencies.get(position));
-            TextView timeTextView = (TextView) rowView.findViewById(R.id.databaseEventDurationTextView);
-            if(Integer.parseInt(timeLeft.get(position)) > 0){
-                timeTextView.setVisibility(View.VISIBLE);
-                timeTextView.setText(timeLeft.get(position) + " minutes");
-                timeTextView.setTypeface(font, Typeface.BOLD);
-            }else {
-                timeTextView.setVisibility(View.INVISIBLE);
-            }
+            if(!frequencies.isEmpty()){
+                TextView textView = (TextView) rowView.findViewById(R.id.databaseEventTextView);
+                textView.setTypeface(font, Typeface.BOLD);
+                textView.setText(eventNames.get(position));
+                TextView frequencyTextView = (TextView) rowView.findViewById(R.id.databaseEventFrequencyTextView);
+                frequencyTextView.setText("every " + frequencies.get(position));
+                TextView timeTextView = (TextView) rowView.findViewById(R.id.databaseEventDurationTextView);
+                if(Integer.parseInt(timeLeft.get(position)) > 0){
+                    timeTextView.setVisibility(View.VISIBLE);
+                    timeTextView.setText(timeLeft.get(position) + " minutes");
+                    timeTextView.setTypeface(font, Typeface.BOLD);
+                }else {
+                    timeTextView.setVisibility(View.INVISIBLE);
+                }
                 ImageView editImage = (ImageView) rowView.findViewById(R.id.databaseEventEditImageView);
                 final View tempView = rowView;
                 editImage.setOnTouchListener(new View.OnTouchListener() {
@@ -100,7 +105,7 @@ public class DatabaseEventListAdapter extends ArrayAdapter<String>{
 //                            ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.check_dark_blue);
                         } else if (event.getAction() == MotionEvent.ACTION_UP) {
 //                            ((ImageView) tempView.findViewById(R.id.finishedImageView)).setImageResource(R.drawable.check_blue);
-                        showEventEdit(eventNames.get(position));
+                            showEventEdit(eventNames.get(position));
                             //finish event
                         }
                         return true;
@@ -113,6 +118,8 @@ public class DatabaseEventListAdapter extends ArrayAdapter<String>{
                         deleteEvent(eventNames.get(position));
                     }
                 });
+            }
+
                 //setListPopup(editImage, eventNames.get(position), Integer.parseInt(timeLeft.get(position)));
 
 
@@ -143,28 +150,6 @@ public class DatabaseEventListAdapter extends ArrayAdapter<String>{
                 duration = Integer.parseInt(eventData.getString(2));
             }
 
-//            Button deleteButton = (Button) d.findViewById(R.id.deleteButton);
-//            deleteButton.setVisibility(View.VISIBLE);
-//            deleteButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    new AlertDialog.Builder(ctx)
-//                            .setTitle("Delete event?")
-//                            .setMessage("Delete " + title + "?")
-//                            .setIcon(android.R.drawable.ic_dialog_alert)
-//                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//
-//                                public void onClick(DialogInterface dialog, int whichButton) {
-//                                    deleteEvent(title, frequency, duration);
-//                                    startActivity(new Intent(NewEventScreen.this, Version2.class));
-//                                    //mainScreen();
-//                                    Toast.makeText(ctx, "Event deleted!", Toast.LENGTH_LONG).show();
-//                                }
-//                            })
-//                            .setNegativeButton(android.R.string.no, null).show();
-//
-//                }
-//            });
             EditText eventTitle = (EditText) d.findViewById(R.id.eventTitle);
             eventTitle.setText(title);
             setCheckBoxes(d, frequency);
@@ -197,8 +182,8 @@ public class DatabaseEventListAdapter extends ArrayAdapter<String>{
                 }
             });
             Button addToPlanner = (Button) d.findViewById(R.id.addToEventsButton);
-            addToPlanner.setText("save");
             addToPlanner.setOnClickListener(new View.OnClickListener() {
+                String oldTitle = ((TextView) d.findViewById(R.id.eventTitle)).getText().toString();
                 @Override
                 public void onClick(View v) {
                     TextView titleView = (TextView) d.findViewById(R.id.eventTitle);
@@ -212,17 +197,27 @@ public class DatabaseEventListAdapter extends ArrayAdapter<String>{
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     final int duration = timeSeekBar.getProgress();
                                     if (!getFrequency(d).equalsIgnoreCase("")) {
-                                        saveEvent(newTitle, getFrequency(d), duration);
-                                        Toast.makeText(ctx, "yes", Toast.LENGTH_LONG);
+                                        DataBaseOperations dbo = new DataBaseOperations(ctx);
+                                        if (!dbo.doesEventNameAlreadyExist(dbo, newTitle)) {
+                                            saveEvent(dbo, oldTitle, newTitle, getFrequency(d), duration);
+                                            d.dismiss();
+                                            todaysEventsFragment.setupTodaysEvents();
+                                            eventFragment.loadEvents();
+                                        } else {
+                                            new AlertDialog.Builder(ctx)
+                                                    .setTitle("Event already exists")
+                                                    .setMessage(newTitle + " is already in the event database. Choose a different name.")
+                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                    .setPositiveButton(android.R.string.yes, null)
+                                                    .show();
+                                        }
                                     } else {
-                                        Toast.makeText(ctx,"nope", Toast.LENGTH_LONG);
                                         new AlertDialog.Builder(ctx)
                                                 .setTitle("Invalid input")
                                                 .setMessage("You must select a day or date first")
                                                 .setIcon(android.R.drawable.ic_dialog_alert)
-                                                .setPositiveButton(android.R.string.yes, null);
+                                                .setPositiveButton(android.R.string.yes, null).show();
                                     }
-
                                 }
                             })
                             .setNegativeButton(android.R.string.no, null).show();
@@ -498,10 +493,10 @@ public class DatabaseEventListAdapter extends ArrayAdapter<String>{
             return frequency;
         }
 
-        private void saveEvent(String title, String frequency, int duration){
-            DataBaseOperations dbo = new DataBaseOperations(ctx);
-            dbo.deleteEvent(dbo, title, frequency, Integer.toString(duration));
+        private void saveEvent(DataBaseOperations dbo, String oldTitle, String title, String frequency, int duration){
+            dbo.deleteEvent(dbo, oldTitle);
             dbo.putInformation(dbo, title, frequency, duration);
+            eventFragment.loadEvents();
 
         }
 
@@ -514,8 +509,9 @@ public class DatabaseEventListAdapter extends ArrayAdapter<String>{
 
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     DataBaseOperations dbo = new DataBaseOperations(ctx);
-                                    //dbo.deleteEvent(dbo, title);
+                                    dbo.deleteEvent(dbo, title);
                                     Toast.makeText(ctx, "Event " + title +  " deleted!", Toast.LENGTH_LONG).show();
+                                    eventFragment.removeElement(title);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, null).show();

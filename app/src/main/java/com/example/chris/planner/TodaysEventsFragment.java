@@ -52,10 +52,13 @@ public class TodaysEventsFragment extends Fragment {
     Context ctx;
     ViewGroup rootView;
     SlideScreenActivity slideScreenActivity;
+    EventListAdapter eventListAdapter;
+    private EventFragment eventFragment;
 
-    public TodaysEventsFragment(Context context, SlideScreenActivity ssa){
+    public TodaysEventsFragment(Context context, SlideScreenActivity ssa, EventFragment ef){
         ctx = context;
         slideScreenActivity = ssa;
+        eventFragment = ef;
     }
 
     @Override
@@ -66,34 +69,11 @@ public class TodaysEventsFragment extends Fragment {
         setupTodaysEvents();
 
         return rootView;
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.todaysEventsFragment);
-//        TableData.TableInfo.EDITING = false;
-//        Intent alarmIntent = new Intent(Version2.this, UnfinishedEventsReminderReceiver.class);
-//        pendingIntent = PendingIntent.getBroadcast(Version2.this, 0, alarmIntent, 0);
-//
-//        Intent bootIntent = new Intent(Version2.this, ResetFinishedEventsReceiver.class);
-//        pendingBootIntent = PendingIntent.getBroadcast(Version2.this, 0, bootIntent, 0);
-//
-//        TextView text = (TextView) findViewById(R.id.textView2);
-//        Typeface font = Typeface.createFromAsset(getAssets(), "ComicSansMS.ttf");
-//        text.setTypeface(font);
-//        //startAlarmAtSpecificTime(12, 12, 1);
-//        startAlarmManager();
-//        startResetAlarmManager();
-//        createStartScreen();
-//        setTabHost();
-        //setTabHost();
-        //showBradley();
-        //setColours();
-
     }
 
     private void setToday(){
         DateFormat df = new SimpleDateFormat("EEEE, LLLL d, yyyy");
         Calendar calobj = Calendar.getInstance();
-//        dateView = (TextView) findViewById(R.id.dateView);
-//        dateView.setText(df.format(calobj.getTime()));
         String[] getDateInfo;
         getDateInfo = df.format(calobj.getTime()).toString().split(",");
         dayOfTheWeek = getDateInfo[0];
@@ -103,20 +83,15 @@ public class TodaysEventsFragment extends Fragment {
 
     public void setupTodaysEvents(){
         DataBaseOperations dbo = new DataBaseOperations(ctx);
-        TextView noEvents = new TextView(getContext());//(TextView) viewById(R.id.todaysEventsFragmentNoEventsView);
+        TextView noEvents = (TextView) viewById(R.id.allEventsFinishedView);
         setToday();
         Cursor cr = dbo.getInformation(dbo, dayOfTheWeek, dateOfTheMonth);
-        //LinearLayout ll = (LinearLayout) viewById(R.id.todaysEventsFragmentLinearLayout);
         expandableListView = (ListView) viewById(R.id.todaysEventsListView);
-        //ll.removeAllViews();
         boolean allFinished = true;
         childList = new HashMap<>();
         eventNames = new ArrayList<>();
         eventFrequencies = new ArrayList<>();
         eventDurations = new ArrayList<>();
-//        eventNames.add("+");
-//        eventFrequencies.add("");
-//        eventDurations.add("");
         if(cr.moveToFirst()){
             do{
                 String eventName, eventFrequency, eventFinished;
@@ -127,11 +102,7 @@ public class TodaysEventsFragment extends Fragment {
                     eventName = cr.getString(0);
                     eventFrequency = cr.getString(1);
                     eventDuration = Integer.parseInt(cr.getString(2));
-                    //new Event(this, eventName, eventFrequency, eventDuration, null, null,ll);
                     setExpandableListEvents(eventName, eventFrequency, Integer.toString(eventDuration));
-//                    eventNames.add(eventName);
-//                    eventFrequencies.add(eventFrequency);
-//                    eventDurations.add(Integer.toString(eventDuration));
                     allFinished = false;
                 }
 
@@ -151,53 +122,18 @@ public class TodaysEventsFragment extends Fragment {
     }
 
     private void setExpandableListEvents(String eventName, String eventFrequency, String eventDuration){
-//
-//        HashMap<String, List<String>> childList = new HashMap<>();
-//        for (int i = 0; i < eventNames.size(); i ++){
-//            List<String> deviceInfo = new ArrayList<>();
-//            deviceInfo.add(eventFrequency.get(i));
-//            deviceInfo.add(eventDuration.get(i));
-//            deviceInfo.add("Edit");
-//            deviceInfo.add("Finished");
-//            deviceInfo.add("Subtract Time");
-//            childList.put(eventNames.get(i), deviceInfo);
-//            Log.d("New Event", eventNames.get(i));
-//        }
-//        ExpandableListView expandableListView = new ExpandableListView(this);
-//        BluetoothExpandableListAdapter adapter = new BluetoothExpandableListAdapter(this, eventNames, childList);
-//        Log.d(eventNames.toString(), childList.toString());
-//        expandableListView.setAdapter(adapter);
-//        ll.addView(expandableListView);
         eventNames.add(eventName);
         eventFrequencies.add(eventFrequency);
         eventDurations.add(eventDuration);
-        for (int i = 0; i < eventNames.size(); i ++){
-            List<String> deviceInfo = new ArrayList<>();
-            //if(i != 0){
-            deviceInfo.add(eventFrequencies.get(i));
-            if(Integer.parseInt(eventDurations.get(i)) > 0){
-                deviceInfo.add("Time remaining: " + eventDurations.get(i));
-            }
-            deviceInfo.add("Edit");
-            deviceInfo.add("Finished");
-            deviceInfo.add("Subtract Time");
-            deviceInfo.add("Move Event To Tomorrow(Once)");
-            deviceInfo.add("Move Event To Tomorrow(Indefinitely)");
-            //}
-
-            childList.put(eventNames.get(i), deviceInfo);
-
-        }
-        EventListAdapter adapter = new EventListAdapter(this, getActivity(), eventNames, eventDurations);
-
-        expandableListView.setAdapter(adapter);
+        eventListAdapter = new EventListAdapter(this, eventFragment , getActivity(), eventNames, eventDurations);
+        expandableListView.setAdapter(eventListAdapter);
     }
 
     public void finishEvent(final String title){
         new AlertDialog.Builder(ctx)
                 .setTitle("Event Finished")
                 .setMessage("Are you sure you've finished "+ title+"?")
-                .setIcon(R.drawable.ic_dialog_alert)
+                .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -208,6 +144,27 @@ public class TodaysEventsFragment extends Fragment {
                     }
                 })
                 .setNegativeButton("no", null).show();
+    }
+
+    public void deleteEvent(final String title){
+        new AlertDialog.Builder(ctx)
+                .setTitle("Delete Event")
+                .setMessage("Are you sure you want to delete "+ title+"?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        DataBaseOperations dbo = new DataBaseOperations(ctx);
+                        dbo.deleteEvent(dbo, title);
+                        setupTodaysEvents();
+                        Toast.makeText(ctx, "Event deleted", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("no", null).show();
+    }
+
+    public void moveEvent(String title , int direction){
+        eventListAdapter.getPosition(title);
     }
 
     private View viewById(int id){

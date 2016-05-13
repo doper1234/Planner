@@ -16,7 +16,9 @@
         android:theme="@style/AppTheme" >
         <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-        <activity android:name=".SlideScreenActivity" >
+        <activity android:name=".SlideScreenActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,39 +37,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".TestActivity" >
-        </activity>
-        <activity android:name=".MainActivity" >
-        </activity>
-        <!-- <activity android:name=".Version2" > -->
-        <!-- </activity> -->
-        <activity android:name=".NewEventScreen" >
-        </activity>
-        <activity android:name=".CalendarActivity" >
-        </activity>
-        <!-- <activity -->
-        <!-- android:name=".History" -->
-        <!-- android:label="@string/title_activity_history" -->
-        <!-- android:theme="@style/AppTheme.NoActionBar" > -->
-        <!-- </activity> -->
-        <activity android:name=".PreviousHistory" >
-        </activity>
-        <activity android:name=".SettingsActivity" >
-        </activity>
-        <activity android:name=".ChangeColour" >
-        </activity>
-        <activity android:name=".ChangeFont" >
-        </activity>
-        <activity android:name=".BluetoothActivity" >
-        </activity>
-        <activity android:name=".DisplayAllEvents" >
-        </activity>
-        <activity android:name=".ChangeColourStatic" >
-        </activity>
-        <activity android:name=".BluetoothNew" >
-        </activity>
-        <activity android:name=".Version2" >
-        </activity>
         <activity android:name=".SampleActivity" android:theme="@style/Theme.Transparent">
         </activity>
     </application>
